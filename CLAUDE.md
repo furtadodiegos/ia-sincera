@@ -4,6 +4,27 @@
 
 Humor app that does light roasts + questionable advice. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
 
+## Goals (Portfolio & Learning)
+
+Este projeto é para **estudo e portfolio**, focado em vagas **senior**. Deve demonstrar:
+
+| Skill | Implementação |
+| ----- | ------------- |
+| Observabilidade | Sentry (errors, traces, logs, metrics) + OTel |
+| Core Web Vitals | Monitoramento via Sentry |
+| Métricas custom | Supabase + página /status |
+| SSG | Landing page estática com Client Components isolados |
+| Analytics | PostHog + Mixpanel (já instalados) |
+
+### Página /status (obrigatória)
+
+Mostrar métricas em tempo real:
+- Uptime
+- Total de roasts gerados
+- Tempo médio de resposta
+- Taxa de erros
+- Core Web Vitals (LCP, FID, CLS)
+
 ## Language
 
 Always respond in **Brazilian Portuguese**.
