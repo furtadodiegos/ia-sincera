@@ -1,36 +1,53 @@
-# Arquitetura Geral
+# Arquitetura
 
-Frontend:
+## Frontend
 
-- Next.js 16+ (App Router)
+- Next.js 15+ (App Router)
 - React 19
 - Tailwind CSS 4
 - TypeScript 5
-- UI simples, foco em leitura e compartilhamento
 
-Backend:
+## Backend
 
 - Cloudflare Workers
-- Responsável por:
-  - geração de respostas
-  - moderação básica
-  - rate limit
+  - Moderação de depoimentos
+  - Rate limit
+  - Validações
 
-Persistência:
+## Persistência
 
 - Supabase (Postgres)
-- Armazena histórico e likes
+  - Usuários
+  - Depoimentos
+  - Auth
 
-Cache / Controle:
+## Cache
 
 - Redis
-- Rate limit
-- Evitar respostas duplicadas
+  - Rate limit
+  - Cache de perfis populares
 
-Tooling:
+## Tooling
 
 - Biome (lint + format)
 - Bun (package manager)
 
-Fluxo:
-User → Next.js → Worker → LLM → Worker → Supabase → UI
+## Fluxo Principal
+
+```
+Visitante → Next.js → Supabase Auth
+         ↓
+    Escreve depoimento
+         ↓
+    Next.js → Worker (moderação) → Supabase
+         ↓
+    Perfil atualizado
+```
+
+## Páginas
+
+| Rota | Tipo | Descrição |
+|------|------|-----------|
+| `/` | SSG | Landing page |
+| `/login` | Client | Auth com Supabase |
+| `/[username]` | SSR/ISR | Perfil público |

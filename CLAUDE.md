@@ -1,8 +1,8 @@
-# IA Sincera - Cursor Rules
+# Depoimentos - Cursor Rules
 
 ## Project
 
-Humor app that does light roasts + questionable advice. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
+Rede social de depoimentos onde seu perfil é construído pelos seus amigos. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
 
 ## Goals (Portfolio & Learning)
 
@@ -15,15 +15,16 @@ Este projeto é para **estudo e portfolio**, focado em vagas **senior**. Deve de
 | Métricas custom | Supabase + página /status |
 | SSG | Landing page estática com Client Components isolados |
 | Analytics | PostHog + Mixpanel (já instalados) |
+| Auth | Supabase Auth (Google) |
 
 ### Página /status (obrigatória)
 
 Mostrar métricas em tempo real:
 - Uptime
-- Total de roasts gerados
+- Total de usuários
+- Total de depoimentos
 - Tempo médio de resposta
-- Taxa de erros
-- Core Web Vitals (LCP, FID, CLS)
+- Core Web Vitals (LCP, CLS, INP)
 
 ## Language
 
@@ -41,10 +42,11 @@ Always respond in **Brazilian Portuguese**.
 ## Stack & Conventions
 
 ```text
-Frontend: Next.js 14+ (App Router), TypeScript, Tailwind
+Frontend: Next.js 15+ (App Router), TypeScript, Tailwind
 Backend: Cloudflare Workers
 Database: Supabase (Postgres)
 Cache: Redis
+Auth: Supabase Auth
 ```
 
 ## React Folder Structure
@@ -77,12 +79,12 @@ Cache: Redis
 | `.hooks.ts`    | useState, useEffect, mutations, side-effects  |
 | `.services.ts` | Pure functions, transformations, calculations |
 
-## Convex (if applicable)
+## Domain Rules
 
-- Minimal and focused APIs
-- Return only necessary data
-- Validate all inputs
-- Never destructive commands without confirmation
+- 1 depoimento por autor por perfil
+- Máximo 140 caracteres por depoimento
+- Perfis públicos por link
+- Moderação obrigatória antes de salvar
 
 ## Before Coding
 
