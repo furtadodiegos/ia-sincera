@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { analytics } from '@/lib/posthog'
 
 type RoastMode = 'tio_churrasco' | 'coach_quantico' | 'amigo_sincero'
 
@@ -27,11 +28,18 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<RoastResponse | null>(null)
 
+  function handleModeChange(newMode: RoastMode) {
+    setMode(newMode)
+    analytics.modeSelected(newMode)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
     setResult(null)
+
+    analytics.roastRequested(mode, drama.length)
 
     try {
       const res = await fetch('/api/roast', {
@@ -43,13 +51,17 @@ export default function Home() {
       const data = await res.json()
 
       if (!res.ok) {
+        const errorType = res.status === 429 ? 'rate_limit' : 'api_error'
+        analytics.roastError(errorType)
         setError(data.error || 'Erro ao gerar roast')
         return
       }
 
+      analytics.roastCompleted(data.mode, data.response_time_ms, data.was_moderated ?? false)
       setResult(data)
       setDrama('')
     } catch {
+      analytics.roastError('network_error')
       setError('Erro de conexao')
     } finally {
       setLoading(false)
@@ -85,7 +97,7 @@ export default function Home() {
               <button
                 key={m}
                 type="button"
-                onClick={() => setMode(m)}
+                onClick={() => handleModeChange(m)}
                 className={`flex-1 rounded border p-2 text-sm ${
                   mode === m ? 'border-blue-500 bg-blue-500 text-white' : 'border-zinc-300 dark:border-zinc-700'
                 }`}>

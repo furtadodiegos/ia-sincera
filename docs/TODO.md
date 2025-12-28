@@ -20,12 +20,15 @@
 
 ## PostHog (Analytics)
 
-- [ ] Evento: roast_requested (mode, drama_length)
-- [ ] Evento: roast_completed (response_time, was_moderated)
+- [x] Instalar posthog-js e criar provider
+- [x] Evento: mode_selected (mode)
+- [x] Evento: roast_requested (mode, drama_length)
+- [x] Evento: roast_completed (response_time_ms, was_moderated)
+- [x] Evento: roast_error (error_type)
 - [ ] Evento: roast_shared quando usuario compartilha
-- [ ] Funil: Landing -> Escolher modo -> Submeter drama -> Ver resultado
-- [ ] Feature flag para novos modos
-- [ ] A/B test de prompts diferentes
+- [x] Configurar funil no dashboard PostHog
+- [ ] Feature flag para novos modos (futuro)
+- [ ] A/B test de prompts diferentes (futuro)
 
 ## Web Vitals (Performance)
 

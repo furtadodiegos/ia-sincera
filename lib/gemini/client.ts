@@ -11,7 +11,7 @@ function getEnvVar(name: string): string {
 export const genAI = new GoogleGenerativeAI(getEnvVar('GEMINI_API_KEY'))
 
 export const model = genAI.getGenerativeModel({
-  model: 'gemini-1.5-flash',
+  model: 'gemini-2.5-flash',
 })
 
-export const MODEL_VERSION = 'gemini-1.5-flash'
+export const MODEL_VERSION = 'gemini-2.5-flash'

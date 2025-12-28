@@ -61,6 +61,7 @@ USUÁRIO                    FRONTEND                 BACKEND                  ST
 | Moderação bloqueia | was_moderated + reason | Supabase | Auditoria/métricas |
 | LLM responde | tokens, tempo, resposta | Supabase | Custo/produto |
 | Resposta chega | roast_completed | PostHog | Fim do funil |
+| Erro na API | roast_error | PostHog | Taxa de falha |
 | Interação | INP, CLS | Sentry | UX real |
 | Compartilha | roast_shared | PostHog | Viralidade |
 | Erro qualquer | Exception + stack | Sentry | Debug |

@@ -52,11 +52,11 @@ POST /api/roast
    │       │
    │       └── [BLOQUEADO] → 429 Too Many Requests
    │
-   ├──> Moderacao ───────> OpenAI
+   ├──> Moderacao ───────> Gemini
    │       │
    │       └── [BLOQUEADO] → Salva no Supabase (was_moderated=true)
    │
-   ├──> Gera Roast ──────> OpenAI
+   ├──> Gera Roast ──────> Gemini
    │
    ├──> Salva ───────────> Supabase (roasts)
    │
@@ -89,8 +89,13 @@ lib/
 │   ├── rate-limit.ts  # Rate limiters
 │   └── stats.ts       # Contadores para /status
 │
-└── gemini/
-    ├── client.ts      # Gemini client
-    ├── prompts.ts     # Prompts por modo
-    └── roast.ts       # Geracao e moderacao
+├── gemini/
+│   ├── client.ts      # Gemini client
+│   ├── prompts.ts     # Prompts por modo
+│   └── roast.ts       # Geracao e moderacao
+│
+└── posthog/
+    ├── client.ts      # PostHog client
+    ├── events.ts      # Eventos tipados
+    └── provider.tsx   # React provider
 ```
