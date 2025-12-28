@@ -23,5 +23,6 @@
   "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "prettier.enable": false
+  "prettier.enable": false,
+  "workbench.editor.enablePreview": false
 }

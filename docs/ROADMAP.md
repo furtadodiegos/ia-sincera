@@ -2,32 +2,31 @@
 
 ## MVP
 
-- [ ] Auth com Supabase (Google)
-- [ ] Criação de perfil (username + about)
-- [ ] Página de perfil público
-- [ ] Envio de depoimentos (140 chars)
-- [ ] Moderação básica
-- [ ] Compartilhamento de link
-- [ ] Landing page
+- [ ] Landing page com input
+- [ ] Selector de modo (3 opcoes)
+- [ ] Integracao com LLM
+- [ ] Moderacao basica
+- [ ] Salvar roasts no Supabase
+- [ ] Exibir resposta formatada
 
 ## Fase 2
 
-- [ ] Notificações (novo depoimento)
-- [ ] Reactions em depoimentos (emojis)
-- [ ] Avatar upload
-- [ ] Perfis verificados
-- [ ] Página /status com métricas
+- [ ] Pagina /status com metricas
+- [ ] Rate limit por IP
+- [ ] Compartilhamento (Web Share API)
+- [ ] Cards para redes sociais (OG Image)
+- [ ] Analytics (PostHog + Mixpanel)
 
 ## Fase 3
 
-- [ ] Depoimentos anônimos (opt-in)
-- [ ] Temas de perfil (cores)
-- [ ] Ranking de perfis mais ativos
-- [ ] Integração com redes (share cards)
+- [ ] Cache de respostas frequentes
+- [ ] Mais modos de resposta
+- [ ] Historico local (localStorage)
 - [ ] PWA
+- [ ] Tema escuro
 
 ## Futuro
 
-- [ ] API pública
-- [ ] Embeds (mostrar depoimentos em outros sites)
-- [ ] Gamificação (badges)
+- [ ] API publica
+- [ ] Embeds (widget para outros sites)
+- [ ] Roasts em audio (TTS)

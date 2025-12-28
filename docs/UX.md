@@ -1,53 +1,87 @@
 # UX Guidelines
 
-## Princípios
+## Principios
 
-- Leitura rápida
-- Zero fricção
-- Foco no conteúdo (depoimentos)
-- Compartilhamento óbvio
+- Simples e direto
+- Zero friccao (sem login)
+- Foco no humor
+- Compartilhamento obvio
 
 ## Regras
 
-### Perfil
+### Landing Page
 
-- About me sempre visível no topo
-- Depoimentos em lista vertical
-- Ordenação: mais recentes primeiro
-- Cada depoimento mostra: autor + texto + data
+- Titulo chamativo
+- Subtitulo explicando o app
+- Input centralizado com placeholder
+- Selector de modo visivel
+- Botao de acao claro
 
-### Input de Depoimento
+### Input de Drama
 
 - Textarea com contador de caracteres
-- Limite visual (140/140)
-- Botão desabilitado se vazio ou exceder limite
-- Feedback de sucesso/erro imediato
+- Limite visual (280/280)
+- Placeholder sugestivo
+- Botao desabilitado se vazio ou exceder limite
+
+### Selector de Modo
+
+- 3 opcoes visiveis (cards ou tabs)
+- Descricao curta de cada modo
+- Modo padrao pre-selecionado
+
+### Resposta
+
+Exibir em formato claro:
+
+```
+ROAST
+[texto do roast]
+
+CONSELHO
+[texto do conselho]
+
+FECHAMENTO
+[texto do fechamento]
+```
+
+- Animacao de loading durante geracao
+- Botao de compartilhar apos resposta
+- Botao de "tentar novamente"
 
 ### Compartilhamento
 
-- Botão de share sempre visível
+- Botao de share sempre visivel apos resposta
 - Suporte a Web Share API (mobile)
-- Fallback: copiar link
+- Fallback: copiar texto
 
 ### Responsividade
 
 - Mobile-first
-- Perfil legível sem scroll horizontal
-- Touch targets mínimo 44px
+- Input legivel sem scroll horizontal
+- Touch targets minimo 44px
 
 ## Estados
 
-### Perfil vazio (sem depoimentos)
+### Inicial
 
-- Mensagem convidativa
-- CTA para compartilhar link
+- Input vazio
+- Modo padrao selecionado
+- Botao desabilitado
 
-### Visitante não logado
-
-- Pode ver perfil
-- Prompt para login ao tentar escrever
-
-### Visitante já escreveu
+### Carregando
 
 - Input desabilitado
-- Mostra seu depoimento destacado
+- Spinner ou skeleton
+- Mensagem de loading divertida
+
+### Sucesso
+
+- Resposta formatada
+- Botoes de acao (share, retry)
+
+### Erro
+
+- Mensagem amigavel
+- Opcao de tentar novamente
+- Fallback para humor neutro

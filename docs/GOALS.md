@@ -2,15 +2,15 @@
 
 ## Produto
 
-- Rede social leve e divertida
-- Perfil público compartilhável por link
-- Zero fricção para deixar depoimentos
-- Viralidade orgânica
+- App de humor leve e compartilhável
+- Zero fricção (sem login necessário)
+- Respostas rápidas e engraçadas
+- Viralidade orgânica (compartilhar roasts)
 
 ## Técnico
 
 - App modelo seguindo padrões modernos (2025+)
-- Preocupação com SEO e Core Web Vitals
+- Preocupação com Core Web Vitals
 - Código simples de entender e manter
 - Performance otimizada (LCP, CLS, INP)
 
@@ -25,14 +25,14 @@ Demonstrar skills de dev senior:
 | Métricas custom | Supabase + página /status |
 | SSG | Landing page estática |
 | Analytics | PostHog + Mixpanel |
-| Auth | Supabase Auth (social login) |
+| LLM Integration | API com moderação |
 
 ## Página /status
 
 Mostrar métricas em tempo real:
 
 - Uptime
-- Total de usuários
-- Total de depoimentos
-- Tempo médio de resposta
+- Total de roasts gerados
+- Tempo médio de resposta da LLM
+- Distribuição por modo
 - Core Web Vitals (LCP, CLS, INP)

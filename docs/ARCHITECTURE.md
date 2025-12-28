@@ -10,22 +10,21 @@
 ## Backend
 
 - Cloudflare Workers
-  - Moderação de depoimentos
+  - Moderação de conteúdo
   - Rate limit
-  - Validações
+  - Chamadas à LLM
 
 ## Persistência
 
 - Supabase (Postgres)
-  - Usuários
-  - Depoimentos
-  - Auth
+  - Roasts (prompts + respostas)
+  - Métricas
 
 ## Cache
 
 - Redis
-  - Rate limit
-  - Cache de perfis populares
+  - Rate limit por IP
+  - Cache de respostas frequentes
 
 ## Tooling
 
@@ -35,19 +34,20 @@
 ## Fluxo Principal
 
 ```
-Visitante → Next.js → Supabase Auth
+Visitante → Next.js → Landing Page
          ↓
-    Escreve depoimento
+    Digita drama do amigo (max 280 chars)
          ↓
-    Next.js → Worker (moderação) → Supabase
+    Escolhe modo (Tio, Coach, Amigo)
          ↓
-    Perfil atualizado
+    Next.js → Worker (moderação + LLM) → Supabase
+         ↓
+    Exibe: Roast + Conselho + Fechamento
 ```
 
 ## Páginas
 
 | Rota | Tipo | Descrição |
 |------|------|-----------|
-| `/` | SSG | Landing page |
-| `/login` | Client | Auth com Supabase |
-| `/[username]` | SSR/ISR | Perfil público |
+| `/` | SSG + Client | Landing page com input |
+| `/status` | SSR | Métricas em tempo real |
