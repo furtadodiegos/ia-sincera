@@ -7,7 +7,7 @@
 ```sql
 CREATE TABLE roasts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  drama TEXT NOT NULL CHECK (char_length(drama) <= 280),
+  drama TEXT NOT NULL CHECK (char_length(drama) <= 140),
   mode TEXT NOT NULL CHECK (mode IN ('tio_churrasco', 'coach_quantico', 'amigo_sincero')),
   roast_response TEXT NOT NULL,
   advice_response TEXT NOT NULL,

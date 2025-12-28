@@ -7,7 +7,7 @@
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | uuid | PK, default gen_random_uuid() |
-| drama | text | NOT NULL, max 280 chars |
+| drama | text | NOT NULL, max 140 chars |
 | mode | text | NOT NULL, enum (tio_churrasco, coach_quantico, amigo_sincero) |
 | roast_response | text | NOT NULL |
 | advice_response | text | NOT NULL |

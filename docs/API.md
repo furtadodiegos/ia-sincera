@@ -30,7 +30,7 @@ Modos disponíveis:
 - `amigo_sincero` - Direto, empático, ironia leve
 
 Validações:
-- Max 280 caracteres no drama
+- Max 140 caracteres no drama
 - Moderação via Worker (bloqueia violência, crime, ódio)
 - Fallback para humor neutro se moderação falhar
 

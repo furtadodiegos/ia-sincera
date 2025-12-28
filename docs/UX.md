@@ -20,7 +20,7 @@
 ### Input de Drama
 
 - Textarea com contador de caracteres
-- Limite visual (280/280)
+- Limite visual (140/140)
 - Placeholder sugestivo
 - Botao desabilitado se vazio ou exceder limite
 

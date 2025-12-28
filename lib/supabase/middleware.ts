@@ -5,6 +5,9 @@ import { supabaseConfig } from './config'
 const PUBLIC_ROUTES = ['/', '/login', '/auth/callback']
 
 function isPublicRoute(pathname: string): boolean {
+  if (pathname.startsWith('/api/')) {
+    return true
+  }
   return PUBLIC_ROUTES.includes(pathname) || pathname.startsWith('/u/')
 }
 

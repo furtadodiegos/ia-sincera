@@ -80,7 +80,7 @@ Auth: Supabase Auth
 
 ## Domain Rules
 
-- Maximum of 280 characters per drama
+- Maximum of 140 characters per drama
 - 3 response modes: Barbecue Uncle, Quantum Coach, Sincere Friend
 - Mandatory moderation (block violence, crime, hate)
 - Fallback to neutral humor if moderation fails
@@ -102,4 +102,3 @@ Auth: Supabase Auth
   ## Required Workflow
 
   - ALWAYS use TodoWrite to create a task list
-  
