@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
 import { getStats } from '@/lib/redis'
 
@@ -19,7 +20,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error('Erro ao buscar stats:', error)
+    Sentry.captureException(error, { tags: { feature: 'status' } })
     return NextResponse.json(
       {
         status: 'error',

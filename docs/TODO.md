@@ -12,11 +12,11 @@
 
 ## Sentry (Observabilidade)
 
-- [ ] Configurar error boundaries com contexto do roast
-- [ ] Adicionar spans customizados para chamadas LLM
-- [ ] Monitorar rate limits da API
-- [ ] Alertas para latencia > 3s
-- [ ] Dashboard de erros por modo
+- [x] Configurar server/client configs com tracing
+- [x] Adicionar spans customizados para chamadas LLM (moderation + roast)
+- [x] Captura de erros com contexto (tags, extra)
+- [ ] Alertas para latencia > 3s (configurar no dashboard)
+- [ ] Dashboard de erros por modo (configurar no dashboard)
 
 ## PostHog (Analytics)
 
@@ -32,11 +32,11 @@
 
 ## Web Vitals (Performance)
 
-- [ ] Integrar web-vitals lib com Sentry
-- [ ] Monitorar LCP da landing page (target < 2.5s)
-- [ ] Monitorar CLS durante carregamento (target < 0.1)
-- [ ] Monitorar INP nas interacoes (target < 200ms)
-- [ ] Dashboard no Sentry com metricas agregadas
+- [x] Integrar browserTracingIntegration com Sentry (auto-capture)
+- [x] Integrar browserProfilingIntegration para INP
+- [x] Integrar replayIntegration para session replays
+- [ ] Verificar metricas no dashboard Sentry (LCP < 2.5s, CLS < 0.1, INP < 200ms)
+- [ ] Ajustar sample rates em producao se necessario
 
 ## Banco de Dados
 
@@ -52,5 +52,5 @@
 - [x] Criar /api/roast com rate limiting
 - [x] Criar /api/status com metricas do Redis
 - [x] Integrar moderacao antes de gerar roast (Gemini)
-- [x] Integrar chamada LLM (Gemini 1.5 Flash)
-- [ ] Adicionar spans do Sentry nas chamadas LLM
+- [x] Integrar chamada LLM (Gemini 2.5 Flash)
+- [x] Adicionar spans do Sentry nas chamadas LLM

@@ -1,6 +1,7 @@
+import * as Sentry from '@sentry/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { generateRoast, moderateDrama, type RoastMode } from '@/lib/gemini'
+import { generateRoast, MODEL_VERSION, moderateDrama, type RoastMode } from '@/lib/gemini'
 import { checkRateLimit, getRateLimitHeaders, incrementRoastStats } from '@/lib/redis'
 import { createModeratedRoast, createRoast, createServerClient } from '@/lib/supabase'
 
@@ -84,7 +85,17 @@ export async function POST(request: Request) {
   const supabase = await createServerClient()
 
   try {
-    const moderation = await moderateDrama(drama)
+    const moderation = await Sentry.startSpan(
+      {
+        name: 'llm.moderation',
+        op: 'ai.run',
+        attributes: {
+          'ai.model_id': MODEL_VERSION,
+          'ai.input_length': drama.length,
+        },
+      },
+      () => moderateDrama(drama),
+    )
 
     if (!moderation.isSafe) {
       const responseTimeMs = Math.round(performance.now() - startTime)
@@ -95,7 +106,7 @@ export async function POST(request: Request) {
         moderation_reason: moderation.reason ?? 'Conteudo inapropriado',
         response_time_ms: responseTimeMs,
         input_tokens: moderation.inputTokens,
-        model_version: 'gemini-1.5-flash',
+        model_version: MODEL_VERSION,
       })
 
       await incrementRoastStats({
@@ -118,7 +129,18 @@ export async function POST(request: Request) {
       )
     }
 
-    const roastResult = await generateRoast(drama, mode)
+    const roastResult = await Sentry.startSpan(
+      {
+        name: 'llm.generate_roast',
+        op: 'ai.run',
+        attributes: {
+          'ai.model_id': MODEL_VERSION,
+          'ai.input_length': drama.length,
+          'ai.mode': mode,
+        },
+      },
+      () => generateRoast(drama, mode),
+    )
     const responseTimeMs = Math.round(performance.now() - startTime)
     const totalTokens = roastResult.inputTokens + roastResult.outputTokens + moderation.inputTokens
 
@@ -153,7 +175,10 @@ export async function POST(request: Request) {
       { headers: getRateLimitHeaders(rateLimit) },
     )
   } catch (error) {
-    console.error('Erro ao criar roast:', error)
+    Sentry.captureException(error, {
+      tags: { mode, feature: 'roast' },
+      extra: { dramaLength: drama.length },
+    })
 
     const responseTimeMs = Math.round(performance.now() - startTime)
     const fallback = FALLBACK_RESPONSES[mode]

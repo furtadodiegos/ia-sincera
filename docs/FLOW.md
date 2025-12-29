@@ -25,6 +25,7 @@ USUÁRIO                    FRONTEND                 BACKEND                  ST
    │                          │                        │                        │
    │                          │  5. POST /api/roast    │                        │
    │                          │───────────────────────>│                        │
+   │                          │                        │──── Span: llm.moderation ──> SENTRY
    │                          │                        │──── Modera drama ────> LLM
    │                          │                        │                        │
    │                          │                        │  [SE BLOQUEADO]        │
@@ -32,6 +33,7 @@ USUÁRIO                    FRONTEND                 BACKEND                  ST
    │                          │                        │<─── 200 + fallback ───│
    │                          │                        │                        │
    │                          │                        │  [SE OK]               │
+   │                          │                        │──── Span: llm.generate_roast ──> SENTRY
    │                          │                        │──── Gera roast ──────> LLM
    │                          │                        │──── Salva tudo ──────> SUPABASE
    │                          │                        │                        │

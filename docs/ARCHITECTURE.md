@@ -8,7 +8,7 @@
 | Backend | Next.js API Routes | Endpoints |
 | Rate Limit | Upstash Redis | Limitar requests por IP |
 | Database | Supabase (Postgres) | Roasts, users, metricas |
-| LLM | Gemini 1.5 Flash | Geracao de roasts + moderacao |
+| LLM | Gemini 2.5 Flash | Geracao de roasts + moderacao |
 | Observability | Sentry | Erros, performance, Web Vitals |
 | Analytics | PostHog | Funis, eventos, comportamento |
 
