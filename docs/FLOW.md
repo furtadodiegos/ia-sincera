@@ -54,7 +54,7 @@ USUÁRIO                    FRONTEND                 BACKEND                  ST
 
 | Momento | Evento | Destino | Por quê |
 |---------|--------|---------|---------|
-| Abre página | LCP, FCP, TTFB | Sentry | Performance real |
+| Abre página | LCP, FCP, TTFB | Sentry + Redis | Performance real + /status |
 | Abre página | Pageview | PostHog | Funil de conversão |
 | Escolhe modo | mode_selected | PostHog | Qual modo é popular |
 | Digita drama | - | Nada | Privacidade |

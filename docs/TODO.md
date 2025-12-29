@@ -35,6 +35,9 @@
 - [x] Integrar browserTracingIntegration com Sentry (auto-capture)
 - [x] Integrar browserProfilingIntegration para INP
 - [x] Integrar replayIntegration para session replays
+- [x] Instalar web-vitals lib para captura no client
+- [x] Criar API /api/vitals para salvar metricas no Redis
+- [x] Exibir Web Vitals na pagina /status (LCP, CLS, INP, FCP, TTFB)
 - [ ] Verificar metricas no dashboard Sentry (LCP < 2.5s, CLS < 0.1, INP < 200ms)
 - [ ] Ajustar sample rates em producao se necessario
 

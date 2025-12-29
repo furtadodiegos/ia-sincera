@@ -94,8 +94,12 @@ lib/
 │   ├── prompts.ts     # Prompts por modo
 │   └── roast.ts       # Geracao e moderacao
 │
-└── posthog/
-    ├── client.ts      # PostHog client
-    ├── events.ts      # Eventos tipados
-    └── provider.tsx   # React provider
+├── posthog/
+│   ├── client.ts      # PostHog client
+│   ├── events.ts      # Eventos tipados
+│   └── provider.tsx   # React provider
+│
+└── web-vitals/
+    ├── reporter.ts    # Captura e envia Web Vitals
+    └── index.ts       # Export
 ```

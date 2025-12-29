@@ -18,6 +18,14 @@ export async function GET() {
         avg_response_time_ms: stats.avgResponseTimeMs,
         total_tokens: stats.totalTokens,
       },
+      web_vitals: {
+        lcp: stats.webVitals.lcp,
+        cls: stats.webVitals.cls,
+        inp: stats.webVitals.inp,
+        fcp: stats.webVitals.fcp,
+        ttfb: stats.webVitals.ttfb,
+        samples: stats.webVitals.samples,
+      },
     })
   } catch (error) {
     Sentry.captureException(error, { tags: { feature: 'status' } })
