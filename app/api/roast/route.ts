@@ -44,6 +44,12 @@ export async function POST(request: Request) {
     )
   }
 
+  Sentry.addBreadcrumb({
+    category: 'auth',
+    message: `Auth context: userId=${auth.userId}, anonymousId=${auth.anonymousId}`,
+    level: 'info',
+  })
+
   try {
     const moderation = await Sentry.startSpan(
       {
@@ -117,12 +123,23 @@ export async function POST(request: Request) {
       { headers: getRateLimitHeaders(rateLimit) },
     )
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : undefined
+    const responseTimeMs = Math.round(performance.now() - startTime)
+
     Sentry.captureException(error, {
+      level: 'error',
       tags: { mode, feature: 'roast' },
-      extra: { dramaLength: drama.length },
+      extra: {
+        dramaLength: drama.length,
+        errorMessage,
+        errorStack,
+        userId: auth.userId,
+        anonymousId: auth.anonymousId,
+      },
     })
 
-    const responseTimeMs = Math.round(performance.now() - startTime)
+    await Sentry.flush(2000)
 
     return NextResponse.json(
       { ...FALLBACK_RESPONSES[mode], mode, fallback: true, response_time_ms: responseTimeMs },

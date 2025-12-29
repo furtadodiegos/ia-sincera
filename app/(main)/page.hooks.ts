@@ -1,8 +1,42 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { analytics } from '@/lib/posthog'
 import type { RoastMode, RoastResponse } from '@/lib/types'
+
+const STORAGE_KEY = 'ia-sincera-draft'
+
+function loadDraft(): { drama: string; mode: RoastMode } {
+  if (typeof window === 'undefined') {
+    return { drama: '', mode: 'tio_churrasco' }
+  }
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      return { drama: parsed.drama || '', mode: parsed.mode || 'tio_churrasco' }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+  return { drama: '', mode: 'tio_churrasco' }
+}
+
+function saveDraft(drama: string, mode: RoastMode) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ drama, mode }))
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
+function clearDraft() {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    // Ignore localStorage errors
+  }
+}
 
 export function useRoastForm() {
   const [drama, setDrama] = useState('')
@@ -11,6 +45,22 @@ export function useRoastForm() {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<RoastResponse | null>(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
+
+  useEffect(() => {
+    const draft = loadDraft()
+    if (draft.drama) {
+      setDrama(draft.drama)
+    }
+    if (draft.mode) {
+      setMode(draft.mode)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (drama || mode !== 'tio_churrasco') {
+      saveDraft(drama, mode)
+    }
+  }, [drama, mode])
 
   function handleModeChange(newMode: RoastMode) {
     setMode(newMode)
@@ -49,6 +99,7 @@ export function useRoastForm() {
       analytics.roastCompleted(data.mode, data.response_time_ms, data.was_moderated ?? false)
       setResult(data)
       setDrama('')
+      clearDraft()
     } catch {
       analytics.roastError('network_error')
       setError('Erro de conexao')

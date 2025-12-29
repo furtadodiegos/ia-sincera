@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { signInWithGoogle } from '@/app/login/login.actions'
 
 type Props = {
@@ -8,8 +9,15 @@ type Props = {
 }
 
 export function LoginModal({ isOpen, onClose }: Props) {
+  const [isLoading, setIsLoading] = useState(false)
+
   if (!isOpen) {
     return null
+  }
+
+  async function handleGoogleLogin() {
+    setIsLoading(true)
+    await signInWithGoogle()
   }
 
   return (
@@ -33,12 +41,22 @@ export function LoginModal({ isOpen, onClose }: Props) {
           Voce ja usou seus 3 roasts gratuitos. Crie uma conta para continuar gerando roasts ilimitados.
         </p>
 
-        <form action={signInWithGoogle}>
+        <form action={handleGoogleLogin}>
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-medium text-gray-900 ring-1 ring-zinc-200 transition-colors hover:bg-gray-100 dark:bg-zinc-800 dark:text-white dark:ring-zinc-700 dark:hover:bg-zinc-700">
-            <GoogleIcon />
-            Entrar com Google
+            disabled={isLoading}
+            className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-medium text-gray-900 ring-1 ring-zinc-200 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:ring-zinc-700 dark:hover:bg-zinc-700">
+            {isLoading ? (
+              <>
+                <LoadingSpinner />
+                Redirecionando...
+              </>
+            ) : (
+              <>
+                <GoogleIcon />
+                Entrar com Google
+              </>
+            )}
           </button>
         </form>
 
@@ -50,6 +68,19 @@ export function LoginModal({ isOpen, onClose }: Props) {
         </button>
       </div>
     </div>
+  )
+}
+
+function LoadingSpinner() {
+  return (
+    <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
   )
 }
 
