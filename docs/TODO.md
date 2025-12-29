@@ -57,3 +57,16 @@
 - [x] Integrar moderacao antes de gerar roast (Gemini)
 - [x] Integrar chamada LLM (Gemini 2.5 Flash)
 - [x] Adicionar spans do Sentry nas chamadas LLM
+
+## Arquitetura (Refatoracao)
+
+- [x] Documentar estrutura de pastas (docs/FOLDER-STRUCTURE.md)
+- [x] Centralizar tipos em lib/types.ts
+- [x] Landing: Separar em Server + Client Components
+- [x] Landing: Criar app/components/ com ModeSelector, RoastResult, RoastForm
+- [x] Landing: Criar page.hooks.ts com useRoastForm
+- [x] Landing: Converter page.tsx para Server Component (SSG)
+- [x] Status: Aplicar mesmo padrao (Server Component + Client polling)
+- [x] Corrigir metadata do layout.tsx (SEO, Open Graph, Twitter)
+- [x] Refatorar /api/roast para < 170 linhas
+- [ ] Criar middleware.ts para Supabase Auth

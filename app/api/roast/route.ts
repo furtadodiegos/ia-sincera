@@ -1,60 +1,11 @@
 import * as Sentry from '@sentry/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { generateRoast, MODEL_VERSION, moderateDrama, type RoastMode } from '@/lib/gemini'
+import { generateRoast, MODEL_VERSION, moderateDrama } from '@/lib/gemini'
 import { checkRateLimit, getRateLimitHeaders, incrementRoastStats } from '@/lib/redis'
 import { createModeratedRoast, createRoast, createServerClient } from '@/lib/supabase'
-
-type RoastRequest = {
-  drama: string
-  mode: RoastMode
-}
-
-const VALID_MODES: RoastMode[] = ['tio_churrasco', 'coach_quantico', 'amigo_sincero']
-
-function getClientIp(headersList: Headers): string {
-  return headersList.get('x-forwarded-for')?.split(',')[0]?.trim() || headersList.get('x-real-ip') || '127.0.0.1'
-}
-
-function validateRequest(body: unknown): { success: true; data: RoastRequest } | { success: false; error: string } {
-  if (!body || typeof body !== 'object') {
-    return { success: false, error: 'Body invalido' }
-  }
-
-  const { drama, mode } = body as Record<string, unknown>
-
-  if (typeof drama !== 'string' || drama.length === 0) {
-    return { success: false, error: 'Drama e obrigatorio' }
-  }
-
-  if (drama.length > 140) {
-    return { success: false, error: 'Drama deve ter no maximo 140 caracteres' }
-  }
-
-  if (!VALID_MODES.includes(mode as RoastMode)) {
-    return { success: false, error: 'Modo invalido' }
-  }
-
-  return { success: true, data: { drama, mode: mode as RoastMode } }
-}
-
-const FALLBACK_RESPONSES: Record<RoastMode, { roast: string; advice: string; closing: string }> = {
-  tio_churrasco: {
-    roast: 'Olha, no meu tempo a gente resolvia isso com uma boa conversa e um churrasquinho.',
-    advice: 'Meu conselho: deixa o tempo resolver. Sempre funciona.',
-    closing: 'Vai dar tudo certo, confia no tio!',
-  },
-  coach_quantico: {
-    roast: 'A energia do universo esta te mostrando que voce precisa vibrar mais alto!',
-    advice: 'Decretar e manifestar: repita 3 vezes "eu sou abundancia".',
-    closing: 'Namaste e boas vibracoes!',
-  },
-  amigo_sincero: {
-    roast: 'Amigo, vou ser sincero: ja vi situacoes piores, mas essa ta complicada.',
-    advice: 'Respira fundo e tenta ver o lado positivo. Ou nao, faz o que quiser.',
-    closing: 'To aqui se precisar, mas resolve isso ai!',
-  },
-}
+import { FALLBACK_RESPONSES } from './roast.fallbacks'
+import { getClientIp, validateRequest } from './roast.validation'
 
 export async function POST(request: Request) {
   const startTime = performance.now()
@@ -89,10 +40,7 @@ export async function POST(request: Request) {
       {
         name: 'llm.moderation',
         op: 'ai.run',
-        attributes: {
-          'ai.model_id': MODEL_VERSION,
-          'ai.input_length': drama.length,
-        },
+        attributes: { 'ai.model_id': MODEL_VERSION, 'ai.input_length': drama.length },
       },
       () => moderateDrama(drama),
     )
@@ -109,22 +57,11 @@ export async function POST(request: Request) {
         model_version: MODEL_VERSION,
       })
 
-      await incrementRoastStats({
-        responseTimeMs,
-        tokens: moderation.inputTokens,
-        wasModerated: true,
-      })
+      await incrementRoastStats({ responseTimeMs, tokens: moderation.inputTokens, wasModerated: true })
 
       const fallback = FALLBACK_RESPONSES[mode]
       return NextResponse.json(
-        {
-          roast: fallback.roast,
-          advice: fallback.advice,
-          closing: fallback.closing,
-          mode,
-          was_moderated: true,
-          response_time_ms: responseTimeMs,
-        },
+        { ...fallback, mode, was_moderated: true, response_time_ms: responseTimeMs },
         { headers: getRateLimitHeaders(rateLimit) },
       )
     }
@@ -133,14 +70,11 @@ export async function POST(request: Request) {
       {
         name: 'llm.generate_roast',
         op: 'ai.run',
-        attributes: {
-          'ai.model_id': MODEL_VERSION,
-          'ai.input_length': drama.length,
-          'ai.mode': mode,
-        },
+        attributes: { 'ai.model_id': MODEL_VERSION, 'ai.input_length': drama.length, 'ai.mode': mode },
       },
       () => generateRoast(drama, mode),
     )
+
     const responseTimeMs = Math.round(performance.now() - startTime)
     const totalTokens = roastResult.inputTokens + roastResult.outputTokens + moderation.inputTokens
 
@@ -157,11 +91,7 @@ export async function POST(request: Request) {
       was_moderated: false,
     })
 
-    await incrementRoastStats({
-      responseTimeMs,
-      tokens: totalTokens,
-      wasModerated: false,
-    })
+    await incrementRoastStats({ responseTimeMs, tokens: totalTokens, wasModerated: false })
 
     return NextResponse.json(
       {
@@ -184,14 +114,7 @@ export async function POST(request: Request) {
     const fallback = FALLBACK_RESPONSES[mode]
 
     return NextResponse.json(
-      {
-        roast: fallback.roast,
-        advice: fallback.advice,
-        closing: fallback.closing,
-        mode,
-        fallback: true,
-        response_time_ms: responseTimeMs,
-      },
+      { ...fallback, mode, fallback: true, response_time_ms: responseTimeMs },
       { status: 200, headers: getRateLimitHeaders(rateLimit) },
     )
   }
