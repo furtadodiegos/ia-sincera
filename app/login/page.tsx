@@ -17,8 +17,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="w-full max-w-md p-8 space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-white">Depoimentos</h1>
-          <p className="text-gray-400">Seu perfil construído pelos seus amigos</p>
+          <h1 className="text-4xl font-bold text-white">Ironizi</h1>
+          <p className="text-gray-400">Roasts e conselhos com humor</p>
         </div>
 
         {error && (

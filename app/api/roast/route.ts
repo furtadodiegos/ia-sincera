@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { generateRoast, MODEL_VERSION, moderateDrama } from '@/lib/gemini'
 import { checkRateLimit, getRateLimitHeaders, incrementRoastStats } from '@/lib/redis'
 import { createModeratedRoast, createRoast, createServerClient } from '@/lib/supabase'
+import { getAuthContext } from './roast.auth'
 import { FALLBACK_RESPONSES } from './roast.fallbacks'
 import { getClientIp, validateRequest } from './roast.validation'
 
@@ -34,6 +35,14 @@ export async function POST(request: Request) {
 
   const { drama, mode } = validation.data
   const supabase = await createServerClient()
+  const auth = await getAuthContext(supabase, ip)
+
+  if (auth.requiresLogin) {
+    return NextResponse.json(
+      { error: 'Limite gratuito atingido. Crie uma conta para continuar.', require_login: true },
+      { status: 403 },
+    )
+  }
 
   try {
     const moderation = await Sentry.startSpan(
@@ -55,13 +64,14 @@ export async function POST(request: Request) {
         response_time_ms: responseTimeMs,
         input_tokens: moderation.inputTokens,
         model_version: MODEL_VERSION,
+        anonymous_id: auth.anonymousId ?? undefined,
+        user_id: auth.userId ?? undefined,
       })
 
       await incrementRoastStats({ responseTimeMs, tokens: moderation.inputTokens, wasModerated: true })
 
-      const fallback = FALLBACK_RESPONSES[mode]
       return NextResponse.json(
-        { ...fallback, mode, was_moderated: true, response_time_ms: responseTimeMs },
+        { ...FALLBACK_RESPONSES[mode], mode, was_moderated: true, response_time_ms: responseTimeMs },
         { headers: getRateLimitHeaders(rateLimit) },
       )
     }
@@ -89,6 +99,8 @@ export async function POST(request: Request) {
       output_tokens: roastResult.outputTokens,
       model_version: roastResult.modelVersion,
       was_moderated: false,
+      anonymous_id: auth.anonymousId ?? undefined,
+      user_id: auth.userId ?? undefined,
     })
 
     await incrementRoastStats({ responseTimeMs, tokens: totalTokens, wasModerated: false })
@@ -111,10 +123,9 @@ export async function POST(request: Request) {
     })
 
     const responseTimeMs = Math.round(performance.now() - startTime)
-    const fallback = FALLBACK_RESPONSES[mode]
 
     return NextResponse.json(
-      { ...fallback, mode, fallback: true, response_time_ms: responseTimeMs },
+      { ...FALLBACK_RESPONSES[mode], mode, fallback: true, response_time_ms: responseTimeMs },
       { status: 200, headers: getRateLimitHeaders(rateLimit) },
     )
   }

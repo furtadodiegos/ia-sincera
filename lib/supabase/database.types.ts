@@ -1,8 +1,6 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: '14.1'
   }
@@ -36,6 +34,7 @@ export type Database = {
       roasts: {
         Row: {
           advice_response: string
+          anonymous_id: string | null
           closing_response: string
           created_at: string
           drama: string
@@ -47,10 +46,12 @@ export type Database = {
           output_tokens: number | null
           response_time_ms: number
           roast_response: string
+          user_id: string | null
           was_moderated: boolean
         }
         Insert: {
           advice_response: string
+          anonymous_id?: string | null
           closing_response: string
           created_at?: string
           drama: string
@@ -62,10 +63,12 @@ export type Database = {
           output_tokens?: number | null
           response_time_ms: number
           roast_response: string
+          user_id?: string | null
           was_moderated?: boolean
         }
         Update: {
           advice_response?: string
+          anonymous_id?: string | null
           closing_response?: string
           created_at?: string
           drama?: string
@@ -77,9 +80,18 @@ export type Database = {
           output_tokens?: number | null
           response_time_ms?: number
           roast_response?: string
+          user_id?: string | null
           was_moderated?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'roasts_user_id_fkey'
+            columns: ['user_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
       }
       testimonials: {
         Row: {
@@ -128,6 +140,7 @@ export type Database = {
           display_name: string | null
           generated_avatar_url: string | null
           id: string
+          role: Database['public']['Enums']['user_role']
           username: string
         }
         Insert: {
@@ -137,6 +150,7 @@ export type Database = {
           display_name?: string | null
           generated_avatar_url?: string | null
           id: string
+          role?: Database['public']['Enums']['user_role']
           username: string
         }
         Update: {
@@ -146,6 +160,7 @@ export type Database = {
           display_name?: string | null
           generated_avatar_url?: string | null
           id?: string
+          role?: Database['public']['Enums']['user_role']
           username?: string
         }
         Relationships: []
@@ -155,6 +170,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_anonymous_roast_count: { Args: { anon_id: string }; Returns: number }
       get_basic_metrics: {
         Args: never
         Returns: {
@@ -174,7 +190,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      user_role: 'user' | 'admin'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -296,6 +312,8 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ['user', 'admin'],
+    },
   },
 } as const

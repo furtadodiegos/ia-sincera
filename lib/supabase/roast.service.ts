@@ -15,6 +15,8 @@ export type CreateRoastInput = {
   model_version?: string
   was_moderated?: boolean
   moderation_reason?: string
+  anonymous_id?: string
+  user_id?: string
 }
 
 type SupabaseClientType = SupabaseClient<Database>
@@ -32,6 +34,8 @@ export async function createRoast(client: SupabaseClientType, input: CreateRoast
     model_version: input.model_version ?? null,
     was_moderated: input.was_moderated ?? false,
     moderation_reason: input.moderation_reason ?? null,
+    anonymous_id: input.anonymous_id ?? null,
+    user_id: input.user_id ?? null,
   }
 
   const { data, error } = await client.from('roasts').insert(insertData).select().single()
@@ -51,6 +55,8 @@ export async function createModeratedRoast(
     response_time_ms: number
     input_tokens?: number
     model_version?: string
+    anonymous_id?: string
+    user_id?: string
   },
 ) {
   return createRoast(client, {
@@ -65,6 +71,8 @@ export async function createModeratedRoast(
     model_version: input.model_version,
     was_moderated: true,
     moderation_reason: input.moderation_reason,
+    anonymous_id: input.anonymous_id,
+    user_id: input.user_id,
   })
 }
 
@@ -82,4 +90,33 @@ export async function getRoastMetrics(client: SupabaseClientType) {
     throw error
   }
   return data
+}
+
+export async function countAnonymousRoasts(client: SupabaseClientType, anonymousId: string): Promise<number> {
+  const { count, error } = await client
+    .from('roasts')
+    .select('*', { count: 'exact', head: true })
+    .eq('anonymous_id', anonymousId)
+
+  if (error) {
+    throw error
+  }
+  return count ?? 0
+}
+
+export async function migrateAnonymousRoasts(
+  client: SupabaseClientType,
+  anonymousId: string,
+  userId: string,
+): Promise<number> {
+  const { data, error } = await client
+    .from('roasts')
+    .update({ user_id: userId, anonymous_id: null })
+    .eq('anonymous_id', anonymousId)
+    .select('id')
+
+  if (error) {
+    throw error
+  }
+  return data?.length ?? 0
 }

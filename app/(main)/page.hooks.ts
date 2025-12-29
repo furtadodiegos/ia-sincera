@@ -10,6 +10,7 @@ export function useRoastForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<RoastResponse | null>(null)
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   function handleModeChange(newMode: RoastMode) {
     setMode(newMode)
@@ -34,6 +35,11 @@ export function useRoastForm() {
       const data = await res.json()
 
       if (!res.ok) {
+        if (data.require_login) {
+          setShowLoginModal(true)
+          analytics.roastError('limit_reached')
+          return
+        }
         const errorType = res.status === 429 ? 'rate_limit' : 'api_error'
         analytics.roastError(errorType)
         setError(data.error || 'Erro ao gerar roast')
@@ -58,6 +64,8 @@ export function useRoastForm() {
     loading,
     error,
     result,
+    showLoginModal,
+    setShowLoginModal,
     handleModeChange,
     handleSubmit,
   }

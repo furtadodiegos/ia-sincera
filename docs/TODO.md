@@ -69,4 +69,16 @@
 - [x] Status: Aplicar mesmo padrao (Server Component + Client polling)
 - [x] Corrigir metadata do layout.tsx (SEO, Open Graph, Twitter)
 - [x] Refatorar /api/roast para < 170 linhas
-- [ ] Criar middleware.ts para Supabase Auth
+- [x] Criar proxy.ts para Supabase Auth (Next.js 16)
+
+## Autenticacao
+
+- [x] Adicionar role (admin, user) na tabela users
+- [x] Adicionar anonymous_id e user_id na tabela roasts
+- [x] Criar lib/auth para gerar anonymous_id unico por IP
+- [x] Limite de 3 roasts para usuarios anonimos
+- [x] Migrar roasts anonimos para user_id apos login
+- [x] Pagina de login com Google OAuth
+- [x] Modal de login quando limite atingido
+- [x] Configurar Google OAuth no Supabase Dashboard
+- [ ] Adicionar env vars de producao (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)

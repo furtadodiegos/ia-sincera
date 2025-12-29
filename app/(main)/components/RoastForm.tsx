@@ -1,11 +1,23 @@
 'use client'
 
 import { useRoastForm } from '../page.hooks'
+import { LoginModal } from './LoginModal'
 import { ModeSelector } from './ModeSelector'
 import { RoastResult } from './RoastResult'
 
 export function RoastForm() {
-  const { drama, setDrama, mode, loading, error, result, handleModeChange, handleSubmit } = useRoastForm()
+  const {
+    drama,
+    setDrama,
+    mode,
+    loading,
+    error,
+    result,
+    showLoginModal,
+    setShowLoginModal,
+    handleModeChange,
+    handleSubmit,
+  } = useRoastForm()
 
   return (
     <>
@@ -40,6 +52,8 @@ export function RoastForm() {
       {error && <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>}
 
       {result && <RoastResult result={result} />}
+
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </>
   )
 }
