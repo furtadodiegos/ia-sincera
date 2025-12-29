@@ -2,45 +2,36 @@
 
 ## Tables
 
-### users
+### roasts
 
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | uuid | PK, default gen_random_uuid() |
-| username | text | UNIQUE, NOT NULL |
-| display_name | text | |
-| about | text | max 280 chars |
-| avatar_url | text | |
-| created_at | timestamptz | default now() |
-
-### testimonials
-
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, default gen_random_uuid() |
-| author_id | uuid | FK users.id, NOT NULL |
-| profile_id | uuid | FK users.id, NOT NULL |
-| content | text | max 140 chars, NOT NULL |
-| created_at | timestamptz | default now() |
-
-**Constraint:** UNIQUE(author_id, profile_id) — 1 depoimento por autor por perfil.
+| drama | text | NOT NULL, max 140 chars |
+| mode | text | NOT NULL, enum (tio_churrasco, coach_quantico, amigo_sincero) |
+| roast_response | text | NOT NULL |
+| advice_response | text | NOT NULL |
+| closing_response | text | NOT NULL |
+| response_time_ms | integer | NOT NULL |
+| created_at | timestamptz | NOT NULL, default now() |
 
 ## Indexes
 
 ```sql
-CREATE INDEX idx_testimonials_profile ON testimonials(profile_id);
-CREATE INDEX idx_testimonials_author ON testimonials(author_id);
-CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX roasts_created_at_idx ON roasts(created_at DESC);
 ```
 
 ## RLS Policies
 
-### users
-- SELECT: público
-- UPDATE: apenas próprio perfil
-- DELETE: apenas próprio perfil
+### roasts
+- INSERT: anonimo permitido
+- SELECT: anonimo permitido (para metricas)
+- UPDATE: nao permitido
+- DELETE: nao permitido
 
-### testimonials
-- SELECT: público
-- INSERT: usuário autenticado (author_id = auth.uid())
-- DELETE: autor ou dono do perfil
+## Functions
+
+| Function | Returns | Description |
+|----------|---------|-------------|
+| get_basic_metrics() | total_roasts, avg_response_time_ms | Metricas basicas |
+| get_roast_metrics() | total, avg, last_24h, last_7d, distribution | Metricas completas |

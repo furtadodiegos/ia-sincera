@@ -1,29 +1,28 @@
-# Depoimentos - Cursor Rules
+# IA Sincera - Cursor Rules
 
 ## Project
 
-Rede social de depoimentos onde seu perfil é construído pelos seus amigos. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
+A humor app where the user submits a "friend's drama" and receives a light roast plus a questionable piece of advice from the AI. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
 
 ## Goals (Portfolio & Learning)
 
-Este projeto é para **estudo e portfolio**, focado em vagas **senior**. Deve demonstrar:
+This project is for **study and portfolio** purposes, aimed at **senior** roles. It should demonstrate:
 
-| Skill | Implementação |
-| ----- | ------------- |
-| Observabilidade | Sentry (errors, traces, logs, metrics) + OTel |
-| Core Web Vitals | Monitoramento via Sentry |
-| Métricas custom | Supabase + página /status |
-| SSG | Landing page estática com Client Components isolados |
-| Analytics | PostHog + Mixpanel (já instalados) |
-| Auth | Supabase Auth (Google) |
+| Skill           | Implementation                                      |
+| --------------- | --------------------------------------------------- |
+| Observability   | Sentry (errors, traces, logs, metrics) + OTel       |
+| Core Web Vitals | Monitoring via Sentry                               |
+| Custom metrics  | Supabase + /status page                             |
+| SSG             | Static landing page with isolated Client Components |
+| Analytics       | PostHog + Mixpanel (already installed)              |
+| LLM Integration | AI API with moderation                              |
 
-### Página /status (obrigatória)
+### /status page (required)
 
-Mostrar métricas em tempo real:
+Display real-time metrics:
 - Uptime
-- Total de usuários
-- Total de depoimentos
-- Tempo médio de resposta
+- Total roasts generated
+- Average LLM response time
 - Core Web Vitals (LCP, CLS, INP)
 
 ## Language
@@ -81,10 +80,11 @@ Auth: Supabase Auth
 
 ## Domain Rules
 
-- 1 depoimento por autor por perfil
-- Máximo 140 caracteres por depoimento
-- Perfis públicos por link
-- Moderação obrigatória antes de salvar
+- Maximum of 140 characters per drama
+- 3 response modes: Barbecue Uncle, Quantum Coach, Sincere Friend
+- Mandatory moderation (block violence, crime, hate)
+- Fallback to neutral humor if moderation fails
+- Save all prompts and responses for metrics
 
 ## Before Coding
 
@@ -98,3 +98,7 @@ Auth: Supabase Auth
 - Unsolicited features
 - Validations for impossible scenarios
 - Premature abstractions
+
+  ## Required Workflow
+
+  - ALWAYS use TodoWrite to create a task list

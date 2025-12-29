@@ -1,21 +1,25 @@
-# Depoimentos
+# IA Sincera
 
-Uma rede social onde seu perfil é construído pelos seus amigos.
+Um app de humor onde voce coloca o "drama do amigo" e recebe um roast leve + conselho questionavel.
 
-Use quando:
+O objetivo nao e ajudar de verdade, e sim:
 
-- quiser saber o que pensam de você
-- quiser deixar sua marca no perfil de alguém
-- quiser um perfil que não seja "eu falando de mim"
+- provocar riso
+- gerar identificacao
+- ser compartilhavel
 
-## Documentação
+## Documentacao
 
 - [IDEA](./IDEA.md) - Conceito e fluxos
-- [ARCHITECTURE](./ARCHITECTURE.md) - Stack e fluxo técnico
+- [ARCHITECTURE](./ARCHITECTURE.md) - Stack e fluxo tecnico
 - [SUPABASE](./SUPABASE.md) - Banco de dados
 - [API](./API.md) - Endpoints
-- [UX](./UX.md) - Guidelines de experiência
-- [MODERATION](./MODERATION.md) - Regras de moderação
-- [REDIS](./REDIS.md) - Cache
-- [CODE_QUALITY](./CODE_QUALITY.md) - Biome, lint, formatação
-- [ROADMAP](./ROADMAP.md) - Próximos passos
+- [UX](./UX.md) - Guidelines de experiencia
+- [MODERATION](./MODERATION.md) - Regras de moderacao
+- [MODES](./MODES.md) - Modos de resposta
+- [PROMPT](./PROMPT.ts) - Prompt base da LLM
+- [REDIS](./REDIS.md) - Cache e rate limit
+- [CODE_QUALITY](./CODE_QUALITY.md) - Biome, lint, formatacao
+- [GOALS](./GOALS.md) - Objetivos
+- [NON_GOALS](./NON_GOALS.md) - Nao objetivos
+- [ROADMAP](./ROADMAP.md) - Proximos passos

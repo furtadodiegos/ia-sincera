@@ -1,81 +1,68 @@
 # API
 
-## Endpoints (via Supabase + Worker)
+## Endpoints
 
-### Perfil
+### POST /api/roast
 
-#### GET /api/profile/[username]
-Retorna perfil público com depoimentos.
+Gera um roast para o drama do amigo.
+
+Request:
+```json
+{
+  "drama": "Meu amigo terminou com a namorada e agora só ouve Adele",
+  "mode": "tio_churrasco"
+}
+```
 
 Response:
 ```json
 {
-  "user": {
-    "username": "diego",
-    "display_name": "Diego",
-    "about": "dev @ somewhere",
-    "avatar_url": "..."
-  },
-  "testimonials": [
-    {
-      "id": "...",
-      "author": { "username": "ana", "display_name": "Ana" },
-      "content": "Melhor dev que já conheci!",
-      "created_at": "2025-01-01T..."
-    }
-  ],
-  "can_write": true
+  "roast": "Ah, o clássico...",
+  "advice": "Manda ele ouvir sertanejo...",
+  "closing": "Boa sorte aí, vai precisar.",
+  "response_time_ms": 1234
 }
 ```
 
-`can_write`: indica se o usuário logado pode escrever depoimento.
-
-#### PATCH /api/profile
-Atualiza about me (autenticado).
-
-Body:
-```json
-{
-  "about": "nova descrição"
-}
-```
-
-### Depoimentos
-
-#### POST /api/testimonial
-Cria depoimento (autenticado).
-
-Body:
-```json
-{
-  "profile_id": "uuid-do-perfil",
-  "content": "texto do depoimento"
-}
-```
+Modos disponíveis:
+- `tio_churrasco` - Senso comum e opiniões vagas
+- `coach_quantico` - Motivação vazia e buzzwords
+- `amigo_sincero` - Direto, empático, ironia leve
 
 Validações:
-- Max 140 caracteres
-- Moderação via Worker
-- 1 por autor por perfil
+- Max 140 caracteres no drama
+- Moderação via Worker (bloqueia violência, crime, ódio)
+- Fallback para humor neutro se moderação falhar
 
-#### DELETE /api/testimonial/[id]
-Remove depoimento (autor ou dono do perfil).
+### GET /api/metrics
 
-### Auth
+Retorna métricas para a página /status.
 
-Gerenciado pelo Supabase Auth:
-- `/api/auth/callback` — OAuth callback
-- `/api/auth/signout` — Logout
+Response:
+```json
+{
+  "total_roasts": 1234,
+  "avg_response_time_ms": 890,
+  "roasts_last_24h": 56,
+  "roasts_last_7d": 420,
+  "mode_distribution": {
+    "tio_churrasco": 500,
+    "coach_quantico": 400,
+    "amigo_sincero": 334
+  }
+}
+```
 
 ## Worker (Cloudflare)
 
 ### POST /moderate
-Verifica se conteúdo é apropriado.
 
-Body:
+Verifica se conteúdo é apropriado antes de enviar à LLM.
+
+Request:
 ```json
 {
-  "content": "texto do depoimento"
+  "content": "texto do drama"
 }
 ```
 
@@ -93,5 +80,26 @@ ou
 {
   "allowed": false,
   "reason": "conteúdo inapropriado"
+}
+```
+
+### POST /generate
+
+Chama a LLM para gerar a resposta.
+
+Request:
+```json
+{
+  "drama": "texto do drama",
+  "mode": "tio_churrasco"
+}
+```
+
+Response:
+```json
+{
+  "roast": "...",
+  "advice": "...",
+  "closing": "..."
 }
 ```

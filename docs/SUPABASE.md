@@ -1,101 +1,85 @@
 # Supabase
 
-## Auth
-
-Providers habilitados:
-- Google
-
-Configuração:
-- Redirect URL: `{site}/api/auth/callback`
-- Trigger para criar perfil após signup
-
 ## Tables
 
-### users
+### roasts
 
 ```sql
-CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  username text UNIQUE NOT NULL,
-  display_name text,
-  about text CHECK (char_length(about) <= 280),
-  avatar_url text,
-  created_at timestamptz DEFAULT now()
+CREATE TABLE roasts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  drama TEXT NOT NULL CHECK (char_length(drama) <= 140),
+  mode TEXT NOT NULL CHECK (mode IN ('tio_churrasco', 'coach_quantico', 'amigo_sincero')),
+  roast_response TEXT NOT NULL,
+  advice_response TEXT NOT NULL,
+  closing_response TEXT NOT NULL,
+  response_time_ms INTEGER NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_users_username ON users(username);
-```
-
-### testimonials
-
-```sql
-CREATE TABLE testimonials (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  author_id uuid REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  profile_id uuid REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  content text NOT NULL CHECK (char_length(content) <= 140),
-  created_at timestamptz DEFAULT now(),
-  UNIQUE(author_id, profile_id)
-);
-
-CREATE INDEX idx_testimonials_profile ON testimonials(profile_id);
-CREATE INDEX idx_testimonials_author ON testimonials(author_id);
+CREATE INDEX roasts_created_at_idx ON roasts(created_at DESC);
 ```
 
 ## RLS Policies
 
-### users
-
 ```sql
--- Leitura pública
-CREATE POLICY "Users are viewable by everyone"
-ON users FOR SELECT USING (true);
+-- RLS habilitado
+ALTER TABLE roasts ENABLE ROW LEVEL SECURITY;
 
--- Update próprio perfil
-CREATE POLICY "Users can update own profile"
-ON users FOR UPDATE USING (auth.uid() = id);
+-- Insercao anonima permitida
+CREATE POLICY "Allow anonymous insert" ON roasts
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
 
--- Delete próprio perfil
-CREATE POLICY "Users can delete own profile"
-ON users FOR DELETE USING (auth.uid() = id);
+-- Leitura anonima permitida (para metricas)
+CREATE POLICY "Allow anonymous read" ON roasts
+  FOR SELECT
+  TO anon
+  USING (true);
 ```
 
-### testimonials
+## Functions
+
+### get_basic_metrics()
+
+Retorna metricas basicas.
 
 ```sql
--- Leitura pública
-CREATE POLICY "Testimonials are viewable by everyone"
-ON testimonials FOR SELECT USING (true);
-
--- Insert autenticado
-CREATE POLICY "Authenticated users can create testimonials"
-ON testimonials FOR INSERT WITH CHECK (auth.uid() = author_id);
-
--- Delete autor ou dono do perfil
-CREATE POLICY "Author or profile owner can delete"
-ON testimonials FOR DELETE USING (
-  auth.uid() = author_id OR auth.uid() = profile_id
-);
-```
-
-## Trigger: Criar perfil após signup
-
-```sql
-CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION get_basic_metrics()
+RETURNS TABLE (
+  total_roasts BIGINT,
+  avg_response_time_ms NUMERIC
+) AS $$
 BEGIN
-  INSERT INTO users (id, username, display_name, avatar_url)
-  VALUES (
-    NEW.id,
-    NEW.raw_user_meta_data->>'preferred_username',
-    NEW.raw_user_meta_data->>'full_name',
-    NEW.raw_user_meta_data->>'avatar_url'
-  );
-  RETURN NEW;
+  RETURN QUERY
+  SELECT
+    COUNT(*)::BIGINT,
+    ROUND(AVG(response_time_ms)::NUMERIC, 2)
+  FROM roasts;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+```
 
-CREATE TRIGGER on_auth_user_created
-AFTER INSERT ON auth.users
-FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+### get_roast_metrics()
+
+Retorna metricas completas.
+
+```sql
+CREATE OR REPLACE FUNCTION get_roast_metrics()
+RETURNS TABLE (
+  total_roasts BIGINT,
+  avg_response_time_ms NUMERIC,
+  roasts_last_24h BIGINT,
+  roasts_last_7d BIGINT,
+  mode_distribution JSONB
+) AS $$
+...
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+```
+
+## Permissoes
+
+```sql
+GRANT EXECUTE ON FUNCTION get_roast_metrics() TO anon;
+GRANT EXECUTE ON FUNCTION get_basic_metrics() TO anon;
 ```

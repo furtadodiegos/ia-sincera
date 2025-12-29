@@ -1,53 +1,105 @@
 # Arquitetura
 
-## Frontend
+## Stack
 
-- Next.js 15+ (App Router)
-- React 19
-- Tailwind CSS 4
-- TypeScript 5
+| Camada | Tecnologia | Uso |
+|--------|------------|-----|
+| Frontend | Next.js 15+, React 19, Tailwind 4 | UI e SSG |
+| Backend | Next.js API Routes | Endpoints |
+| Rate Limit | Upstash Redis | Limitar requests por IP |
+| Database | Supabase (Postgres) | Roasts, users, metricas |
+| LLM | Gemini 2.5 Flash | Geracao de roasts + moderacao |
+| Observability | Sentry | Erros, performance, Web Vitals |
+| Analytics | PostHog | Funis, eventos, comportamento |
 
-## Backend
+## Persistencia
 
-- Cloudflare Workers
-  - Moderação de depoimentos
-  - Rate limit
-  - Validações
+### Supabase (Postgres)
 
-## Persistência
+- `roasts` - Dramas, respostas, tokens, moderacao
+- `users` - Perfis de usuario
+- `testimonials` - Depoimentos entre usuarios
 
-- Supabase (Postgres)
-  - Usuários
-  - Depoimentos
-  - Auth
+### Upstash (Redis)
 
-## Cache
+- Rate limiting por IP
+- Contadores para /status
+- Cache de moderacao (futuro)
 
-- Redis
-  - Rate limit
-  - Cache de perfis populares
+## Observabilidade
 
-## Tooling
-
-- Biome (lint + format)
-- Bun (package manager)
+| Ferramenta | O que vai la |
+|------------|--------------|
+| Supabase | Dados de produto (roasts, tokens, custos) |
+| Sentry | Erros, spans, Web Vitals |
+| PostHog | Eventos de usuario, funis, A/B tests |
 
 ## Fluxo Principal
 
 ```
-Visitante → Next.js → Supabase Auth
-         ↓
-    Escreve depoimento
-         ↓
-    Next.js → Worker (moderação) → Supabase
-         ↓
-    Perfil atualizado
+Usuario
+   │
+   ▼
+Next.js (Landing)
+   │
+   ├──> Web Vitals ──────> Sentry
+   ├──> Pageview ────────> PostHog
+   │
+   ▼
+POST /api/roast
+   │
+   ├──> Rate Limit ──────> Upstash Redis
+   │       │
+   │       └── [BLOQUEADO] → 429 Too Many Requests
+   │
+   ├──> Moderacao ───────> Gemini
+   │       │
+   │       └── [BLOQUEADO] → Salva no Supabase (was_moderated=true)
+   │
+   ├──> Gera Roast ──────> Gemini
+   │
+   ├──> Salva ───────────> Supabase (roasts)
+   │
+   ├──> Incrementa ──────> Upstash Redis (stats)
+   │
+   └──> Retorna resposta
 ```
 
-## Páginas
+## Paginas
 
-| Rota | Tipo | Descrição |
+| Rota | Tipo | Descricao |
 |------|------|-----------|
-| `/` | SSG | Landing page |
-| `/login` | Client | Auth com Supabase |
-| `/[username]` | SSR/ISR | Perfil público |
+| `/` | SSG + Client | Landing page com formulario |
+| `/status` | SSR | Metricas em tempo real (Redis + Sentry) |
+| `/login` | Client | Autenticacao via Google |
+| `/:username` | SSR | Perfil publico do usuario |
+
+## Libs Internas
+
+```
+lib/
+├── supabase/
+│   ├── client.ts      # Browser client
+│   ├── server.ts      # Server client
+│   ├── database.types.ts  # Types gerados
+│   └── roast.service.ts   # CRUD de roasts
+│
+├── redis/
+│   ├── client.ts      # Upstash client
+│   ├── rate-limit.ts  # Rate limiters
+│   └── stats.ts       # Contadores para /status
+│
+├── gemini/
+│   ├── client.ts      # Gemini client
+│   ├── prompts.ts     # Prompts por modo
+│   └── roast.ts       # Geracao e moderacao
+│
+├── posthog/
+│   ├── client.ts      # PostHog client
+│   ├── events.ts      # Eventos tipados
+│   └── provider.tsx   # React provider
+│
+└── web-vitals/
+    ├── reporter.ts    # Captura e envia Web Vitals
+    └── index.ts       # Export
+```

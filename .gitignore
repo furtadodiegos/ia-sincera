@@ -44,3 +44,12 @@ next-env.d.ts
 
 site.js
 site2.js
+
+# Moat task system
+.moat/
+
+# Claude Code configuration
+.claude/
+.moat/
+.mcp.json
+supabase/.temp/
