@@ -72,17 +72,17 @@ export function LoginModal({ isOpen, onClose }: Props) {
         className="animate-slide-up relative mx-4 w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
         <div className="bg-linear-to-r from-indigo-600 to-purple-600 p-6 text-center text-white">
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-3xl">
-            🔐
+            🤖
           </div>
           <h2 id="login-modal-title" className="text-xl font-bold">
-            Limite atingido!
+            Eita, gostou da zueira?
           </h2>
         </div>
 
         <div className="p-6">
           <p className="mb-6 text-center text-slate-600">
-            Você já usou seus <span className="font-bold">3 roasts gratuitos</span>. Crie uma conta para continuar
-            gerando roasts ilimitados.
+            Fico feliz que tá curtindo toda essa ironia! Faz o login aí pra provar que tu não é robô e continua com a
+            zoeira.
           </p>
 
           <form action={handleGoogleLogin}>

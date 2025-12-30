@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useEffect, useRef } from 'react'
 import { useRoastForm } from '../page.hooks'
 import { ModeSelector } from './ModeSelector'
 
@@ -25,6 +26,14 @@ export function RoastForm() {
     handleModeChange,
     handleSubmit,
   } = useRoastForm()
+
+  const resultRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }
+  }, [result])
 
   function LoadingSpinner() {
     return (
@@ -66,7 +75,7 @@ export function RoastForm() {
         <button
           type="submit"
           disabled={loading || drama.length === 0}
-          className="group relative w-full overflow-hidden rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50">
+          className="group relative w-full cursor-pointer overflow-hidden rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50">
           <span className="relative z-10 flex items-center justify-center gap-2">
             {loading ? (
               <>
@@ -93,7 +102,11 @@ export function RoastForm() {
         </div>
       )}
 
-      {result && <RoastResult result={result} />}
+      {result && (
+        <div ref={resultRef}>
+          <RoastResult result={result} />
+        </div>
+      )}
 
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </>

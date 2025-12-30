@@ -30,7 +30,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               Status
             </Link>
             <a
-              href="https://github.com/diegofurtado/ia-sincera"
+              href="https://github.com/furtadodiegos/ia-sincera"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 transition-colors hover:text-slate-900">
@@ -52,7 +52,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
         <p>
-          Feito com 🔥 e um pouco de sarcasmo •{' '}
+          Feito com 🔥 e um pouco de ironia •{' '}
           <a href="https://github.com/diegofurtado" className="underline hover:text-slate-700">
             Diego Furtado
           </a>
