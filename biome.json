@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json", "**/*.css"]
+    "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json", "**/*.css", "!site.js", "!site2.js"]
   },
   "formatter": {
     "enabled": true,
@@ -30,6 +30,8 @@
       },
       "correctness": {
         "noInvalidUseBeforeDeclaration": "error",
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
         "useHookAtTopLevel": "error",
         "useExhaustiveDependencies": "warn"
       },

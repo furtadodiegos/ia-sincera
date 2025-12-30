@@ -24,48 +24,57 @@ export function LoginModal({ isOpen, onClose }: Props) {
     // biome-ignore lint/a11y/noStaticElementInteractions: Modal backdrop pattern
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
       onKeyDown={(e) => e.key === 'Escape' && onClose()}>
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="login-modal-title"
-        className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl dark:bg-zinc-900"
+        className="animate-slide-up mx-4 w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}>
-        <h2 id="login-modal-title" className="mb-2 text-xl font-bold">
-          Limite atingido!
-        </h2>
-        <p className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">
-          Voce ja usou seus 3 roasts gratuitos. Crie uma conta para continuar gerando roasts ilimitados.
-        </p>
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-center text-white">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-3xl">
+            🔐
+          </div>
+          <h2 id="login-modal-title" className="text-xl font-bold">
+            Limite atingido!
+          </h2>
+        </div>
 
-        <form action={handleGoogleLogin}>
+        <div className="p-6">
+          <p className="mb-6 text-center text-slate-600">
+            Você já usou seus <span className="font-bold">3 roasts gratuitos</span>. Crie uma conta para continuar
+            gerando roasts ilimitados.
+          </p>
+
+          <form action={handleGoogleLogin}>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:shadow disabled:cursor-not-allowed disabled:opacity-50">
+              {isLoading ? (
+                <>
+                  <LoadingSpinner />
+                  Redirecionando...
+                </>
+              ) : (
+                <>
+                  <GoogleIcon />
+                  Entrar com Google
+                </>
+              )}
+            </button>
+          </form>
+
           <button
-            type="submit"
-            disabled={isLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-lg bg-white px-4 py-3 font-medium text-gray-900 ring-1 ring-zinc-200 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:ring-zinc-700 dark:hover:bg-zinc-700">
-            {isLoading ? (
-              <>
-                <LoadingSpinner />
-                Redirecionando...
-              </>
-            ) : (
-              <>
-                <GoogleIcon />
-                Entrar com Google
-              </>
-            )}
+            type="button"
+            onClick={onClose}
+            className="mt-4 w-full py-2 text-sm text-slate-500 transition-colors hover:text-slate-700">
+            Talvez depois
           </button>
-        </form>
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-3 w-full py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300">
-          Talvez depois
-        </button>
+        </div>
       </div>
     </div>
   )
@@ -73,7 +82,7 @@ export function LoginModal({ isOpen, onClose }: Props) {
 
 function LoadingSpinner() {
   return (
-    <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg className="h-5 w-5 animate-spin text-slate-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"

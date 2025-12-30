@@ -24,5 +24,8 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "prettier.enable": false,
-  "workbench.editor.enablePreview": false
+  "workbench.editor.enablePreview": false,
+  "eslint.enable": true,
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["typescript", "typescriptreact"]
 }
