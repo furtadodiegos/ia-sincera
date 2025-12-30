@@ -1,7 +1,66 @@
+import { analytics } from '@/lib/posthog'
 import { MODE_LABELS, type RoastResponse } from '@/lib/types'
 
 type RoastResultProps = {
   result: RoastResponse
+}
+
+type ResultCardProps = {
+  icon: string
+  title: string
+  variant: 'primary' | 'secondary' | 'accent'
+  children: React.ReactNode
+}
+
+const variantStyles = {
+  primary: 'border-indigo-200 bg-linear-to-br from-indigo-50 to-purple-50',
+  secondary: 'border-amber-200 bg-linear-to-br from-amber-50 to-orange-50',
+  accent: 'border-slate-200 bg-linear-to-br from-slate-50 to-slate-100',
+}
+
+function ResultCard({ icon, title, variant, children }: ResultCardProps) {
+  return (
+    <div className={`rounded-xl border p-5 ${variantStyles[variant]}`}>
+      <div className="mb-2 flex items-center gap-2">
+        <span className="text-lg">{icon}</span>
+
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</span>
+      </div>
+
+      <p className="text-lg leading-relaxed text-slate-700">{children}</p>
+    </div>
+  )
+}
+
+function ShareButton({ result }: { result: RoastResponse }) {
+  function handleShare() {
+    analytics.roastShared(result.mode, result.provider)
+
+    const text = `🔥 ${result.roast}\n\n💡 ${result.advice}\n\n😈 ${result.closing}\n\n— Via Ironizi.app`
+
+    if (navigator.share) {
+      navigator.share({ title: result.drama, text })
+    } else {
+      navigator.clipboard.writeText(text)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleShare}
+      className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:shadow">
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+        />
+      </svg>
+      Compartilhar
+    </button>
+  )
 }
 
 export function RoastResult({ result }: RoastResultProps) {
@@ -25,11 +84,11 @@ export function RoastResult({ result }: RoastResultProps) {
         )}
       </div>
 
-      <ResultCard icon="🔥" title="O Roast" variant="primary">
+      <ResultCard icon="🔥" title={result.drama} variant="primary">
         {result.roast}
       </ResultCard>
 
-      <ResultCard icon="💡" title="O Conselho" variant="secondary">
+      <ResultCard icon="💡" title="Conselho" variant="secondary">
         {result.advice}
       </ResultCard>
 
@@ -41,59 +100,5 @@ export function RoastResult({ result }: RoastResultProps) {
         <ShareButton result={result} />
       </div>
     </div>
-  )
-}
-
-type ResultCardProps = {
-  icon: string
-  title: string
-  variant: 'primary' | 'secondary' | 'accent'
-  children: React.ReactNode
-}
-
-const variantStyles = {
-  primary: 'border-indigo-200 bg-linear-to-br from-indigo-50 to-purple-50',
-  secondary: 'border-amber-200 bg-linear-to-br from-amber-50 to-orange-50',
-  accent: 'border-slate-200 bg-linear-to-br from-slate-50 to-slate-100',
-}
-
-function ResultCard({ icon, title, variant, children }: ResultCardProps) {
-  return (
-    <div className={`rounded-xl border p-5 ${variantStyles[variant]}`}>
-      <div className="mb-2 flex items-center gap-2">
-        <span className="text-lg">{icon}</span>
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</span>
-      </div>
-      <p className="text-lg leading-relaxed text-slate-700">{children}</p>
-    </div>
-  )
-}
-
-function ShareButton({ result }: { result: RoastResponse }) {
-  function handleShare() {
-    const text = `🔥 ${result.roast}\n\n💡 ${result.advice}\n\n🎤 ${result.closing}\n\n— Via Ironizi.app`
-
-    if (navigator.share) {
-      navigator.share({ title: 'Meu Roast', text })
-    } else {
-      navigator.clipboard.writeText(text)
-    }
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={handleShare}
-      className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:shadow">
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-        />
-      </svg>
-      Compartilhar
-    </button>
   )
 }

@@ -1,12 +1,61 @@
 import * as Sentry from '@sentry/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { generateRoast, MODEL_VERSION, moderateDrama } from '@/lib/gemini'
+import { generateRoast, moderateDrama } from '@/lib/llm'
+import type { RateLimitResult } from '@/lib/redis'
 import { checkRateLimit, getRateLimitHeaders, incrementRoastStats } from '@/lib/redis'
 import { createModeratedRoast, createRoast, createServerClient } from '@/lib/supabase'
+import type { RoastMode } from '@/lib/types'
 import { getAuthContext } from './roast.auth'
 import { FALLBACK_RESPONSES } from './roast.fallbacks'
 import { getClientIp, validateRequest } from './roast.validation'
+
+async function parseRequestBody(request: Request) {
+  try {
+    return { success: true as const, body: await request.json() }
+  } catch {
+    return { success: false as const, error: 'JSON invalido' }
+  }
+}
+
+type ErrorContext = {
+  mode: RoastMode
+  drama: string
+  auth: { userId: string | null; anonymousId: string | null }
+  startTime: number
+  rateLimit: RateLimitResult
+}
+
+async function handleGenerationError(error: unknown, ctx: ErrorContext) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+  const errorStack = error instanceof Error ? error.stack : undefined
+  const responseTimeMs = Math.round(performance.now() - ctx.startTime)
+
+  Sentry.captureException(error, {
+    level: 'error',
+    tags: { mode: ctx.mode, feature: 'roast' },
+    extra: {
+      dramaLength: ctx.drama.length,
+      errorMessage,
+      errorStack,
+      userId: ctx.auth.userId,
+      anonymousId: ctx.auth.anonymousId,
+    },
+  })
+
+  await Sentry.flush(2000)
+
+  return NextResponse.json(
+    {
+      ...FALLBACK_RESPONSES[ctx.mode],
+      mode: ctx.mode,
+      fallback: true,
+      response_time_ms: responseTimeMs,
+      provider: 'gemini' as const,
+    },
+    { status: 200, headers: getRateLimitHeaders(ctx.rateLimit) },
+  )
+}
 
 export async function POST(request: Request) {
   const startTime = performance.now()
@@ -21,14 +70,12 @@ export async function POST(request: Request) {
     )
   }
 
-  let body: unknown
-  try {
-    body = await request.json()
-  } catch {
-    return NextResponse.json({ error: 'JSON invalido' }, { status: 400 })
+  const parseResult = await parseRequestBody(request)
+  if (!parseResult.success) {
+    return NextResponse.json({ error: parseResult.error }, { status: 400 })
   }
 
-  const validation = validateRequest(body)
+  const validation = validateRequest(parseResult.body)
   if (!validation.success) {
     return NextResponse.json({ error: validation.error }, { status: 400 })
   }
@@ -50,14 +97,16 @@ export async function POST(request: Request) {
     level: 'info',
   })
 
+  const userIdentifier = auth.userId ?? auth.anonymousId ?? ip
+
   try {
     const moderation = await Sentry.startSpan(
       {
         name: 'llm.moderation',
         op: 'ai.run',
-        attributes: { 'ai.model_id': MODEL_VERSION, 'ai.input_length': drama.length },
+        attributes: { 'ai.input_length': drama.length },
       },
-      () => moderateDrama(drama),
+      () => moderateDrama(drama, userIdentifier),
     )
 
     if (!moderation.isSafe) {
@@ -69,7 +118,7 @@ export async function POST(request: Request) {
         moderation_reason: moderation.reason ?? 'Conteudo inapropriado',
         response_time_ms: responseTimeMs,
         input_tokens: moderation.inputTokens,
-        model_version: MODEL_VERSION,
+        model_version: moderation.provider,
         anonymous_id: auth.anonymousId ?? undefined,
         user_id: auth.userId ?? undefined,
       })
@@ -77,7 +126,13 @@ export async function POST(request: Request) {
       await incrementRoastStats({ responseTimeMs, tokens: moderation.inputTokens, wasModerated: true })
 
       return NextResponse.json(
-        { ...FALLBACK_RESPONSES[mode], mode, was_moderated: true, response_time_ms: responseTimeMs },
+        {
+          ...FALLBACK_RESPONSES[mode],
+          mode,
+          was_moderated: true,
+          response_time_ms: responseTimeMs,
+          provider: moderation.provider,
+        },
         { headers: getRateLimitHeaders(rateLimit) },
       )
     }
@@ -86,9 +141,9 @@ export async function POST(request: Request) {
       {
         name: 'llm.generate_roast',
         op: 'ai.run',
-        attributes: { 'ai.model_id': MODEL_VERSION, 'ai.input_length': drama.length, 'ai.mode': mode },
+        attributes: { 'ai.input_length': drama.length, 'ai.mode': mode },
       },
-      () => generateRoast(drama, mode),
+      () => generateRoast(drama, mode, userIdentifier),
     )
 
     const responseTimeMs = Math.round(performance.now() - startTime)
@@ -119,31 +174,11 @@ export async function POST(request: Request) {
         closing: roastResult.closing,
         mode,
         response_time_ms: responseTimeMs,
+        provider: roastResult.provider,
       },
       { headers: getRateLimitHeaders(rateLimit) },
     )
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const errorStack = error instanceof Error ? error.stack : undefined
-    const responseTimeMs = Math.round(performance.now() - startTime)
-
-    Sentry.captureException(error, {
-      level: 'error',
-      tags: { mode, feature: 'roast' },
-      extra: {
-        dramaLength: drama.length,
-        errorMessage,
-        errorStack,
-        userId: auth.userId,
-        anonymousId: auth.anonymousId,
-      },
-    })
-
-    await Sentry.flush(2000)
-
-    return NextResponse.json(
-      { ...FALLBACK_RESPONSES[mode], mode, fallback: true, response_time_ms: responseTimeMs },
-      { status: 200, headers: getRateLimitHeaders(rateLimit) },
-    )
+    return handleGenerationError(error, { mode, drama, auth, startTime, rateLimit })
   }
 }

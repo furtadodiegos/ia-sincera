@@ -64,7 +64,6 @@ export function useRoastForm() {
 
   function handleModeChange(newMode: RoastMode) {
     setMode(newMode)
-    analytics.modeSelected(newMode)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -96,8 +95,8 @@ export function useRoastForm() {
         return
       }
 
-      analytics.roastCompleted(data.mode, data.response_time_ms, data.was_moderated ?? false)
-      setResult(data)
+      analytics.roastCompleted(data.mode, data.response_time_ms, data.was_moderated ?? false, data.provider)
+      setResult({ ...data, drama })
       setDrama('')
       clearDraft()
     } catch {

@@ -30,7 +30,7 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
             key={mode}
             type="button"
             onClick={() => onChange(mode)}
-            className={`group relative rounded-xl border-2 p-4 text-left transition-all ${
+            className={`group relative cursor-pointer rounded-xl border-2 p-4 text-left transition-all ${
               value === mode
                 ? 'border-indigo-500 bg-indigo-50 shadow-md'
                 : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
