@@ -58,8 +58,8 @@ export default function Home() {
         <p
           className="animate-slide-up mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-slate-600 md:text-xl"
           style={{ animationDelay: '0.2s' }}>
-          Conta o drama do seu amigo e recebe um roast sincero com um conselho questionável. A IA mais sincera que você
-          vai encontrar.
+          Conta o drama do seu amigo e recebe uma zoeira sincera com um conselho questionável. A IA mais sincera que
+          você vai encontrar.
         </p>
       </div>
 

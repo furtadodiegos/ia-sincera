@@ -13,6 +13,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2 select-none">
             <span className="text-2xl sm:text-3xl">😈</span>
+
             <span className="flex flex-col text-left text-base font-bold leading-tight tracking-tight sm:block sm:text-xl">
               <span>Te Ajudo, </span>
               <span className="font-normal text-slate-400 sm:inline">Mas Não Muito</span>

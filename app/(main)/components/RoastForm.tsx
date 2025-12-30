@@ -1,9 +1,16 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useRoastForm } from '../page.hooks'
-import { LoginModal } from './LoginModal'
 import { ModeSelector } from './ModeSelector'
-import { RoastResult } from './RoastResult'
+
+const LoginModal = dynamic(() => import('./LoginModal').then((mod) => mod.LoginModal), {
+  ssr: false,
+})
+
+const RoastResult = dynamic(() => import('./RoastResult').then((mod) => mod.RoastResult), {
+  ssr: false,
+})
 
 export function RoastForm() {
   const {
