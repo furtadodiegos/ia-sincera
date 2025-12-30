@@ -59,7 +59,7 @@ export async function createModeratedRoast(
     user_id?: string
   },
 ) {
-  return createRoast(client, {
+  return await createRoast(client, {
     drama: input.drama,
     mode: input.mode,
     roast_response: '',

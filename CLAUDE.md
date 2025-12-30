@@ -2,7 +2,7 @@
 
 ## Project
 
-A humor app where the user submits a "friend's drama" and receives a light roast plus a questionable piece of advice from the AI. Stack: Next.js (App Router), Cloudflare Workers, Supabase, Redis.
+A humor app where the user submits a "friend's drama" and receives a light roast plus a questionable piece of advice from the AI. Stack: Next.js (App Router), Vercel, Supabase, Redis.
 
 ## Goals (Portfolio & Learning)
 
@@ -14,7 +14,7 @@ This project is for **study and portfolio** purposes, aimed at **senior** roles.
 | Core Web Vitals | Monitoring via Sentry                               |
 | Custom metrics  | Supabase + /status page                             |
 | SSG             | Static landing page with isolated Client Components |
-| Analytics       | PostHog + Mixpanel (already installed)              |
+| Analytics       | PostHog                                             |
 | LLM Integration | AI API with moderation                              |
 
 ### /status page (required)
@@ -42,10 +42,11 @@ Always respond in **Brazilian Portuguese**.
 
 ```text
 Frontend: Next.js 15+ (App Router), TypeScript, Tailwind
-Backend: Cloudflare Workers
+Backend: Next.js API Routes
 Database: Supabase (Postgres)
-Cache: Redis
+Cache: Redis (Upstash)
 Auth: Supabase Auth
+Deploy: Vercel
 ```
 
 ## React Folder Structure

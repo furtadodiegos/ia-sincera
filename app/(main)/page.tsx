@@ -49,7 +49,7 @@ export default function Home() {
           className="animate-slide-up mb-6 text-4xl font-bold leading-tight tracking-tight md:text-6xl"
           style={{ animationDelay: '0.1s' }}>
           Conselhos que você não pediu, mas{' '}
-          <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             precisava ouvir
           </span>
           .

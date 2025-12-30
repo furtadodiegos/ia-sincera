@@ -34,7 +34,7 @@ export function LoginModal({ isOpen, onClose }: Props) {
         className="animate-slide-up mx-4 w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-center text-white">
+        <div className="bg-linear-to-r from-indigo-600 to-purple-600 p-6 text-center text-white">
           <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-3xl">
             🔐
           </div>
