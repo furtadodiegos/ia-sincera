@@ -48,18 +48,22 @@ export default function Home() {
         <h1
           className="animate-slide-up mb-6 text-4xl font-bold leading-tight tracking-tight md:text-6xl"
           style={{ animationDelay: '0.1s' }}>
-          Conselhos que você não pediu, mas{' '}
-          <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            precisava ouvir
-          </span>
-          .
+          Zoeiras e conselhos com{' '}
+          <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">humor e IA</span>
         </h1>
 
         <p
           className="animate-slide-up mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-slate-600 md:text-xl"
           style={{ animationDelay: '0.2s' }}>
-          Conta o drama do seu amigo e recebe um roast sincero com um conselho questionável. A IA mais sincera que você
-          vai encontrar.
+          Conta o drama do seu amigo e recebe uma zoeira sincera com um conselho questionável. A IA mais sincera que
+          você vai encontrar.
+        </p>
+
+        <p
+          className="animate-slide-up mx-auto mb-4 max-w-2xl text-sm leading-relaxed text-slate-500"
+          style={{ animationDelay: '0.25s' }}>
+          Escolha entre o Tio do Churrasco, o Coach Quântico ou o Amigo Sincero. Cada modo tem seu estilo único de dar
+          aquele conselho que ninguém pediu.
         </p>
       </div>
 
