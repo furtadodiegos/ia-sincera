@@ -50,7 +50,6 @@ export function RoastForm() {
               placeholder="Ex: João trouxe Itaipava no churrasco de novo..."
               required
             />
-            {/* <div className="ai-input-accent" /> */}
           </div>
           <p className="mt-2 text-right text-xs text-slate-500">{drama.length}/140</p>
         </div>
@@ -60,7 +59,7 @@ export function RoastForm() {
         <button
           type="submit"
           disabled={loading || drama.length === 0}
-          className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50">
+          className="group relative w-full overflow-hidden rounded-lg bg-linear-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50">
           <span className="relative z-10 flex items-center justify-center gap-2">
             {loading ? (
               <>
@@ -74,7 +73,7 @@ export function RoastForm() {
               </>
             )}
           </span>
-          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-purple-600 to-pink-600 transition-transform group-hover:translate-x-0" />
+          <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-purple-600 to-pink-600 transition-transform group-hover:translate-x-0" />
         </button>
       </form>
 

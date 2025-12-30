@@ -52,9 +52,9 @@ type ResultCardProps = {
 }
 
 const variantStyles = {
-  primary: 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50',
-  secondary: 'border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50',
-  accent: 'border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100',
+  primary: 'border-indigo-200 bg-linear-to-br from-indigo-50 to-purple-50',
+  secondary: 'border-amber-200 bg-linear-to-br from-amber-50 to-orange-50',
+  accent: 'border-slate-200 bg-linear-to-br from-slate-50 to-slate-100',
 }
 
 function ResultCard({ icon, title, variant, children }: ResultCardProps) {
