@@ -19,24 +19,40 @@ export function RoastForm() {
     handleSubmit,
   } = useRoastForm()
 
+  function LoadingSpinner() {
+    return (
+      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    )
+  }
+
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="drama" className="mb-1 block text-sm font-medium">
-            Drama do amigo
+          <label htmlFor="drama" className="mb-2 block text-sm font-semibold text-slate-700">
+            Qual é o drama de hoje?
           </label>
-          <textarea
-            id="drama"
-            value={drama}
-            onChange={(e) => setDrama(e.target.value)}
-            maxLength={140}
-            rows={3}
-            className="w-full rounded border border-zinc-300 p-2 dark:border-zinc-700 dark:bg-zinc-900"
-            placeholder="Conta o drama..."
-            required
-          />
-          <p className="mt-1 text-right text-xs text-zinc-500">{drama.length}/140</p>
+          <div className="ai-input-wrapper">
+            <textarea
+              id="drama"
+              value={drama}
+              onChange={(e) => setDrama(e.target.value)}
+              maxLength={140}
+              rows={3}
+              className="ai-input"
+              placeholder="Ex: João trouxe Itaipava no churrasco de novo..."
+              required
+            />
+            {/* <div className="ai-input-accent" /> */}
+          </div>
+          <p className="mt-2 text-right text-xs text-slate-500">{drama.length}/140</p>
         </div>
 
         <ModeSelector value={mode} onChange={handleModeChange} />
@@ -44,12 +60,32 @@ export function RoastForm() {
         <button
           type="submit"
           disabled={loading || drama.length === 0}
-          className="w-full rounded bg-zinc-900 p-3 font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900">
-          {loading ? 'Gerando...' : 'Gerar Roast'}
+          className="group relative w-full overflow-hidden rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50">
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {loading ? (
+              <>
+                <LoadingSpinner />
+                Gerando resposta...
+              </>
+            ) : (
+              <>
+                <span className="text-lg">🔥</span>
+                Gerar resposta irônica
+              </>
+            )}
+          </span>
+          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-purple-600 to-pink-600 transition-transform group-hover:translate-x-0" />
         </button>
       </form>
 
-      {error && <p className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</p>}
+      {error && (
+        <div className="animate-slide-down mt-6 rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="flex items-center gap-2 text-red-700">
+            <span>⚠️</span>
+            {error}
+          </p>
+        </div>
+      )}
 
       {result && <RoastResult result={result} />}
 
