@@ -50,7 +50,6 @@ export function RoastForm() {
               placeholder="Ex: João trouxe Itaipava no churrasco de novo..."
               required
             />
-            {/* <div className="ai-input-accent" /> */}
           </div>
           <p className="mt-2 text-right text-xs text-slate-500">{drama.length}/140</p>
         </div>
