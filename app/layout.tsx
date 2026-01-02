@@ -20,26 +20,38 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Ironizi - Zoeiras e Conselhos com Humor',
+    default: 'Ironizi - A IA mais sincera que você vai encontrar',
     template: '%s | Ironizi',
   },
   description:
-    'Conte o drama do seu amigo e receba uma zoeira sincera com um conselho questionavel. Humor garantido com IA!',
-  keywords: ['zoeira', 'humor', 'ia', 'conselho', 'drama', 'amigo', 'ironizi', 'zueira', 'sarcasmo'],
+    'Conte o drama do seu amigo e receba uma zoeira sincera com um conselho questionável. A IA de humor que fala o que todo mundo pensa!',
+  keywords: ['zoeira', 'humor', 'ia', 'conselho', 'drama', 'amigo', 'ironizi', 'zueira', 'sarcasmo', 'roast', 'gpt'],
   authors: [{ name: 'Diego Furtado' }],
   creator: 'Diego Furtado',
   metadataBase: new URL('https://ironizi.app'),
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
+    url: 'https://ironizi.app',
     siteName: 'Ironizi',
-    title: 'Ironizi - Zoeiras e Conselhos com Humor',
-    description: 'Conte o drama do seu amigo e receba uma zoeira sincera com um conselho questionavel.',
+    title: 'Ironizi - A IA mais sincera que você vai encontrar',
+    description:
+      'Conte o drama do seu amigo e receba uma zoeira sincera com um conselho questionável. Humor garantido!',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ironizi - Zoeiras e Conselhos com IA',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ironizi',
-    description: 'Zoeiras e conselhos com humor para o drama do seu amigo.',
+    site: '@ironizi',
+    title: 'Ironizi - A IA mais sincera que você vai encontrar',
+    description: 'Conte o drama e receba uma zoeira sincera com um conselho questionável!',
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,

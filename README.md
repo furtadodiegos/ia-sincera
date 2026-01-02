@@ -2,9 +2,9 @@
 
 # Ironizi.app
 
-**A IA mais sincera que você vai encontrar.**
+**The most brutally honest AI you'll ever meet.**
 
-Uma aplicação de humor onde você conta o drama e recebe um roast leve com conselhos questionáveis.
+A humor app where you submit your drama and get a light roast with questionable advice in return.
 
 [![Live Demo](https://img.shields.io/badge/demo-ironizi.app-indigo?style=for-the-badge)](https://ironizi.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -14,61 +14,61 @@ Uma aplicação de humor onde você conta o drama e recebe um roast leve com con
 
 ---
 
-## Por que este projeto existe?
+## Why does this project exist?
 
-Este é um **projeto de portfolio** desenvolvido para demonstrar skills de **desenvolvedor senior** em um cenário real de produção. Não é apenas um CRUD — é uma aplicação completa com:
+This is a **portfolio project** built to showcase **senior developer** skills in a production-like scenario. It's not just another CRUD — it's a complete application with:
 
-- **Multi-provider LLM** (GPT-4o-mini + Gemini) com load balancing por usuário
-- **Observabilidade full-stack** (Sentry, PostHog, métricas custom)
-- **Performance otimizada** (Core Web Vitals monitorados)
-- **Arquitetura escalável** (rate limiting, caching, fallbacks)
-
----
-
-## Stack Técnica
-
-| Camada | Tecnologia | Justificativa |
-|--------|------------|---------------|
-| **Frontend** | Next.js 15, React 19, Tailwind 4 | App Router, Server Components, streaming |
-| **Backend** | Next.js API Routes | Serverless, edge-ready |
-| **Database** | Supabase (Postgres) | RLS, real-time, auth integrado |
-| **Cache** | Upstash Redis | Rate limiting, contadores, sessão |
-| **LLM** | OpenAI + Gemini | Multi-provider com fallback automático |
-| **Observability** | Sentry | Errors, traces, Web Vitals, releases |
-| **Analytics** | PostHog | Eventos, funnels, feature flags |
-| **Deploy** | Vercel | Edge functions, preview deploys |
+- **Multi-provider LLM** (GPT-4o-mini + Gemini) with per-user load balancing
+- **Full-stack observability** (Sentry, PostHog, custom metrics)
+- **Performance optimized** (Core Web Vitals monitoring)
+- **Scalable architecture** (rate limiting, caching, fallbacks)
 
 ---
 
-## Arquitetura
+## Tech Stack
+
+| Layer      | Technology                        | Reason                           |
+|------------|-----------------------------------|----------------------------------|
+| **Frontend** | Next.js 15, React 19, Tailwind 4      | App Router, Server Components, streaming |
+| **Backend**  | Next.js API Routes                    | Serverless, edge-ready           |
+| **Database** | Supabase (Postgres)                   | RLS, real-time, integrated auth  |
+| **Cache**    | Upstash Redis                         | Rate limiting, counters, session |
+| **LLM**      | OpenAI + Gemini                       | Multi-provider with auto fallback|
+| **Observability** | Sentry                           | Errors, traces, Web Vitals, releases |
+| **Analytics**     | PostHog                         | Events, funnels, feature flags   |
+| **Deploy**        | Vercel                          | Edge functions, preview deploys  |
+
+---
+
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         Cliente (Browser)                        │
+│                            Client (Browser)                    │
 ├─────────────────────────────────────────────────────────────────┤
 │  Next.js App Router │ React 19 │ Tailwind 4 │ Web Vitals        │
 └───────────────────────────────┬─────────────────────────────────┘
                                 │
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                      API Routes (Serverless)                     │
+│                      API Routes (Serverless)                    │
 ├─────────────────────────────────────────────────────────────────┤
 │  Rate Limit (Redis) → Moderation (LLM) → Generation (LLM)       │
 │                                                                  │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
-│  │   Upstash    │    │   OpenAI     │    │   Gemini     │       │
-│  │   Redis      │    │  gpt-4o-mini │    │  2.5-flash   │       │
-│  └──────────────┘    └──────────────┘    └──────────────┘       │
-│         │                    │                   │               │
-│         │              ┌─────┴─────┐             │               │
-│         │              │  LLM Load │◄────────────┘               │
-│         │              │  Balancer │  Ratio 2:1 (GPT:Gemini)     │
-│         │              └───────────┘                             │
-└─────────┼───────────────────────────────────────────────────────┘
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐        │
+│  │   Upstash    │    │   OpenAI     │    │   Gemini     │        │
+│  │   Redis      │    │  gpt-4o-mini │    │  2.5-flash   │        │
+│  └──────────────┘    └──────────────┘    └──────────────┘        │
+│         │                    │                   │                │
+│         │              ┌─────┴─────┐             │                │
+│         │              │  LLM Load │◄────────────┘                │
+│         │              │  Balancer │  Ratio 2:1 (GPT:Gemini)      │
+│         │              └───────────┘                              │
+└─────────┼────────────────────────────────────────────────────────┘
           │
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                        Supabase (Postgres)                       │
+│                        Supabase (Postgres)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  roasts │ users │ testimonials │ RLS policies │ migrations      │
 └─────────────────────────────────────────────────────────────────┘
@@ -76,98 +76,98 @@ Este é um **projeto de portfolio** desenvolvido para demonstrar skills de **des
 
 ---
 
-## Features Técnicas
+## Technical Features
 
-### Multi-Provider LLM com Load Balancing
+### Multi-Provider LLM with Load Balancing
 
 ```typescript
 // lib/llm/selector.ts
-// Ratio 2:1 por usuário, persistido no Redis por 24h
+// 2:1 ratio per user, persisted in Redis for 24h
 const provider = counter % 3 === 2 ? 'gemini' : 'openai'
 ```
 
-- **Fallback automático**: se um provider falha, usa resposta pré-definida
-- **Tracking por usuário**: cada user tem seu próprio contador
-- **Métricas separadas**: PostHog rastreia performance por provider
+- **Automatic fallback**: if a provider fails, a default response is returned
+- **Per-user tracking**: each user has their own counter
+- **Separate metrics**: PostHog tracks provider performance individually
 
-### Observabilidade Completa
+### Complete Observability
 
-| Ferramenta | O que monitora |
-|------------|----------------|
-| **Sentry** | Errors, traces, LLM spans, Web Vitals, releases |
-| **PostHog** | Eventos (roast_requested, roast_completed, roast_shared) |
-| **Redis** | Contadores em tempo real para /status |
-| **Supabase** | Tokens consumidos, response times, moderation rate |
+| Tool      | What it tracks                                                              |
+|-----------|-----------------------------------------------------------------------------|
+| **Sentry**  | Errors, traces, LLM spans, Web Vitals, releases                           |
+| **PostHog** | Events (roast_requested, roast_completed, roast_shared)                   |
+| **Redis**   | Real-time counters for /status                                            |
+| **Supabase**| Tokens consumed, response times, moderation rate                          |
 
-### Rate Limiting Inteligente
+### Smart Rate Limiting
 
 ```typescript
-// Sliding window por IP
-roasts: 10 requests/hora
-requests: 60 requests/minuto
+// Sliding window per IP
+roasts: 10 requests/hour
+requests: 60 requests/minute
 ```
 
-### Moderação de Conteúdo
+### Content Moderation
 
-- Cada input passa por moderação antes da geração
-- Conteúdo inapropriado retorna resposta genérica (nunca erro)
-- Logs de moderação para análise posterior
+- Every input goes through moderation before generation
+- Inappropriate content gets a generic response (never an error)
+- Moderation logs are saved for later analysis
 
 ### Core Web Vitals
 
-Métricas coletadas e enviadas para Sentry + endpoint próprio:
+Metrics are collected and sent to Sentry plus a custom endpoint:
 - **LCP** < 2.5s
 - **CLS** < 0.1
 - **INP** < 200ms
 
 ---
 
-## Estrutura de Pastas
+## Folder Structure
 
 ```
 ├── app/
-│   ├── (main)/              # Grupo de rotas principais
-│   │   ├── components/      # Componentes da feature
+│   ├── (main)/              # Main route group
+│   │   ├── components/      # Feature components
 │   │   ├── page.tsx         # Landing page (SSG)
-│   │   └── page.hooks.ts    # Lógica client-side
+│   │   └── page.hooks.ts    # Client-side logic
 │   ├── api/
-│   │   ├── roast/           # Endpoint principal
-│   │   ├── status/          # Métricas em tempo real
+│   │   ├── roast/           # Main endpoint
+│   │   ├── status/          # Real-time metrics
 │   │   └── vitals/          # Core Web Vitals
-│   └── status/              # Dashboard público
+│   └── status/              # Public dashboard
 │
 ├── lib/
-│   ├── llm/                 # Abstração multi-provider
-│   ├── openai/              # Provider OpenAI
-│   ├── gemini/              # Provider Gemini
+│   ├── llm/                 # Multi-provider abstraction
+│   ├── openai/              # OpenAI provider
+│   ├── gemini/              # Gemini provider
 │   ├── supabase/            # Database client + services
-│   ├── redis/               # Rate limit + stats
-│   ├── posthog/             # Analytics tipado
-│   └── web-vitals/          # Coleta de métricas
+│   ├── redis/               # Rate limiting + stats
+│   ├── posthog/             # Typed analytics
+│   └── web-vitals/          # Metrics collection
 │
-└── docs/                    # Documentação técnica
+└── docs/                    # Technical documentation
 ```
 
 ---
 
-## Rodando Localmente
+## Running Locally
 
 ```bash
 # Clone
 git clone https://github.com/seu-usuario/ia-sincera.git
 cd ia-sincera
 
-# Instale dependências
+# Install dependencies
 bun install
 
-# Configure variáveis de ambiente
+# Configure environment variables
 cp .env.example .env.local
 
-# Rode o projeto
+# Start the project
 bun dev
 ```
 
-### Variáveis de Ambiente
+### Environment Variables
 
 ```env
 # LLM Providers
@@ -191,48 +191,48 @@ NEXT_PUBLIC_POSTHOG_HOST=
 
 ---
 
-## Decisões Técnicas
+## Technical Decisions
 
-| Decisão | Alternativa | Por que escolhi |
-|---------|-------------|-----------------|
-| Next.js App Router | Pages Router | Server Components, streaming, melhor DX |
-| Supabase | PlanetScale, Neon | Auth integrado, RLS, real-time |
-| Upstash Redis | Redis Cloud | Serverless, HTTP API, preço |
-| Dual LLM | Só OpenAI | Redundância, comparação de custos |
-| Sentry | Datadog, New Relic | Melhor integração Next.js, Web Vitals |
-| PostHog | Mixpanel, Amplitude | Open source, self-host option |
+| Decision              | Alternative           | Why I chose it                                     |
+|-----------------------|----------------------|----------------------------------------------------|
+| Next.js App Router    | Pages Router         | Server Components, streaming, better DX            |
+| Supabase              | PlanetScale, Neon    | Integrated auth, RLS, real-time capabilities       |
+| Upstash Redis         | Redis Cloud          | Serverless, HTTP API, pricing                      |
+| Dual LLM              | Only OpenAI          | Redundancy, cost comparison                        |
+| Sentry                | Datadog, New Relic   | Best Next.js integration, Web Vitals support       |
+| PostHog               | Mixpanel, Amplitude  | Open source, self-host option                      |
 
 ---
 
-## Métricas de Produção
+## Production Metrics
 
-A página `/status` mostra em tempo real:
+The `/status` page shows in real time:
 
-- Total de roasts gerados
-- Response time médio (P75)
-- Taxa de moderação
+- Total roasts generated
+- Average response time (P75)
+- Moderation rate
 - Core Web Vitals (LCP, CLS, INP)
-- Distribuição por modo
+- Distribution by mode
 
 ---
 
-## Próximos Passos
+## Next Steps
 
-- [ ] A/B testing de prompts via PostHog
-- [ ] Cache de moderação no Redis
-- [ ] Perfis públicos com histórico
-- [ ] API pública com rate limiting por API key
+- [ ] A/B testing prompts via PostHog
+- [ ] Moderation cache in Redis
+- [ ] Public profiles with history
+- [ ] Public API with per-API key rate limiting
 
 ---
 
-## Autor
+## Author
 
-Desenvolvido como projeto de portfolio para demonstrar arquitetura moderna de aplicações web.
+Developed as a portfolio project to demonstrate modern web app architecture.
 
 ---
 
 <div align="center">
 
-**[Ver Demo](https://ironizi.app)** · **[Documentação](./docs/)**
+**[See Demo](https://ironizi.app)** · **[Documentation](./docs/)**
 
 </div>
