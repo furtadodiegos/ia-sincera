@@ -7,9 +7,22 @@ export function Preconnect() {
 
   return (
     <>
-      {supabaseUrl && <link rel="preconnect" href={supabaseUrl} />}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      {supabaseUrl && (
+        <>
+          <link rel="preconnect" href={supabaseUrl} />
+          <link rel="dns-prefetch" href={supabaseUrl} />
+        </>
+      )}
       <link rel="preconnect" href={posthogHost} />
-      {sentryHost && <link rel="preconnect" href={sentryHost} />}
+      <link rel="dns-prefetch" href={posthogHost} />
+      {sentryHost && (
+        <>
+          <link rel="preconnect" href={sentryHost} />
+          <link rel="dns-prefetch" href={sentryHost} />
+        </>
+      )}
     </>
   )
 }

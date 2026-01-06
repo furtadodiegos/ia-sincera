@@ -18,15 +18,27 @@ const securityHeaders = [
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
 ]
 
+const cacheHeaders = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SENTRY_RELEASE: RELEASE_VERSION,
   },
+  compress: true,
+  poweredByHeader: false,
   headers() {
     return [
       {
         source: '/:path*',
         headers: securityHeaders,
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: cacheHeaders,
+      },
+      {
+        source: '/fonts/:path*',
+        headers: cacheHeaders,
       },
     ]
   },

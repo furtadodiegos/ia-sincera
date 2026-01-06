@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
+
 import { generateAnonymousId } from '@/lib/auth'
 import { migrateAnonymousRoasts } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase/server'

@@ -6,6 +6,7 @@ export function StructuredData() {
     description:
       'Aplicativo de humor com IA que gera zoeiras e conselhos para o drama do seu amigo. Escolha entre Tio do Churrasco, Coach Quântico ou Amigo Sincero.',
     url: 'https://ironizi.app',
+    image: 'https://ironizi.app/thumbnail.png',
     applicationCategory: 'EntertainmentApplication',
     operatingSystem: 'Web',
     offers: {

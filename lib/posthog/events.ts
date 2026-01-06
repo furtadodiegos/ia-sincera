@@ -17,7 +17,7 @@ export const analytics = {
     })
   },
 
-  roastError: (errorType: 'rate_limit' | 'api_error' | 'network_error' | 'limit_reached') => {
+  roastError: (errorType: 'rate_limit' | 'api_error' | 'network_error' | 'limit_reached' | 'daily_limit') => {
     posthog.capture('roast_error', { error_type: errorType })
   },
 

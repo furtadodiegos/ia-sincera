@@ -1,7 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+
 import { FREE_LIMIT, generateAnonymousId } from '@/lib/auth'
-import type { Database } from '@/lib/supabase'
 import { countAnonymousRoasts } from '@/lib/supabase'
+import type { Database } from '@/lib/supabase'
 
 type AuthContext = {
   anonymousId: string | null

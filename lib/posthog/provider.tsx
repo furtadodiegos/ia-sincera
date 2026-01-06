@@ -1,13 +1,27 @@
 'use client'
 
 import { useEffect } from 'react'
-import { reportWebVitals } from '@/lib/web-vitals'
+
 import { initPostHog } from './client'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     initPostHog()
-    reportWebVitals()
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(
+        async () => {
+          const { reportWebVitals } = await import('@/lib/web-vitals')
+          reportWebVitals()
+        },
+        { timeout: 5000 },
+      )
+    } else {
+      setTimeout(async () => {
+        const { reportWebVitals } = await import('@/lib/web-vitals')
+        reportWebVitals()
+      }, 100)
+    }
   }, [])
 
   return <>{children}</>

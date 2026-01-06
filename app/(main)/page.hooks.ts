@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { analytics } from '@/lib/posthog'
-import type { RoastMode, RoastResponse } from '@/lib/types'
+import type { DailyLimitError, LLMProvider, RoastMode, RoastResponse } from '@/lib/types'
 
 const STORAGE_KEY = 'ia-sincera-draft'
 
@@ -45,6 +46,8 @@ export function useRoastForm() {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<RoastResponse | null>(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [dailyRemaining, setDailyRemaining] = useState<number | null>(null)
+  const [dailyLimitInfo, setDailyLimitInfo] = useState<DailyLimitError | null>(null)
 
   useEffect(() => {
     const draft = loadDraft()
@@ -66,6 +69,40 @@ export function useRoastForm() {
     setMode(newMode)
   }
 
+  type ApiResponse = { ok: boolean; status: number; data: Record<string, unknown> }
+
+  function handleApiError({ status, data }: ApiResponse) {
+    if (data.require_login) {
+      setShowLoginModal(true)
+      analytics.roastError('limit_reached')
+      return
+    }
+    if (data.daily_limit_reached) {
+      setDailyLimitInfo(data as unknown as DailyLimitError)
+      setDailyRemaining(0)
+      analytics.roastError('daily_limit')
+      return
+    }
+    const errorType = status === 429 ? 'rate_limit' : 'api_error'
+    analytics.roastError(errorType)
+    setError((data.error as string) || 'Erro ao gerar roast')
+  }
+
+  function handleApiSuccess(data: Record<string, unknown>) {
+    analytics.roastCompleted(
+      data.mode as RoastMode,
+      data.response_time_ms as number,
+      (data.was_moderated as boolean) ?? false,
+      data.provider as LLMProvider,
+    )
+    setResult({ ...data, drama } as unknown as RoastResponse)
+    if (typeof data.daily_remaining === 'number') {
+      setDailyRemaining(data.daily_remaining)
+    }
+    setDrama('')
+    clearDraft()
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
@@ -84,21 +121,11 @@ export function useRoastForm() {
       const data = await res.json()
 
       if (!res.ok) {
-        if (data.require_login) {
-          setShowLoginModal(true)
-          analytics.roastError('limit_reached')
-          return
-        }
-        const errorType = res.status === 429 ? 'rate_limit' : 'api_error'
-        analytics.roastError(errorType)
-        setError(data.error || 'Erro ao gerar roast')
+        handleApiError({ ok: res.ok, status: res.status, data })
         return
       }
 
-      analytics.roastCompleted(data.mode, data.response_time_ms, data.was_moderated ?? false, data.provider)
-      setResult({ ...data, drama })
-      setDrama('')
-      clearDraft()
+      handleApiSuccess(data)
     } catch {
       analytics.roastError('network_error')
       setError('Erro de conexao')
@@ -116,6 +143,9 @@ export function useRoastForm() {
     result,
     showLoginModal,
     setShowLoginModal,
+    dailyRemaining,
+    dailyLimitInfo,
+    setDailyLimitInfo,
     handleModeChange,
     handleSubmit,
   }

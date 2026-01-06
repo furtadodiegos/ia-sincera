@@ -214,7 +214,20 @@
     "enabled": true,
     "actions": {
       "source": {
-        "organizeImports": "on"
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              { "source": ":PACKAGE:", "type": false },
+              { "source": ":PACKAGE:", "type": true },
+              ":BLANK_LINE:",
+              { "source": ":ALIAS:", "type": false },
+              { "source": ":ALIAS:", "type": true },
+              { "source": ":RELATIVE:", "type": false },
+              { "source": ":RELATIVE:", "type": true }
+            ]
+          }
+        }
       }
     }
   }

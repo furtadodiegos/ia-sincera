@@ -4,6 +4,7 @@ const DecorativeBlurs = () => {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 opacity-30">
       <div className="absolute right-0 top-0 h-96 w-96 -translate-y-1/2 translate-x-1/2 rounded-full bg-purple-200 blur-3xl" />
+
       <div className="absolute bottom-0 left-0 h-96 w-96 -translate-x-1/2 translate-y-1/2 rounded-full bg-orange-200 blur-3xl" />
     </div>
   )
@@ -14,6 +15,7 @@ const StatusBadge = () => {
     <div className="animate-fade-in mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700">
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
+
         <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
       </span>
       Agora com IA (Ignorância Artificial)
@@ -30,8 +32,10 @@ const WindowCard = ({ children }: { children: React.ReactNode }) => {
           <div className="h-3 w-3 rounded-full bg-yellow-400" />
           <div className="h-3 w-3 rounded-full bg-green-400" />
         </div>
+
         <div className="font-mono text-xs text-slate-400">ironizi.app</div>
       </div>
+
       <div className="p-6 md:p-8">{children}</div>
     </div>
   )

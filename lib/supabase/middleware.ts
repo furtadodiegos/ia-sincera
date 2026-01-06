@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
+
 import { supabaseConfig } from './config'
 
 const PUBLIC_ROUTES = ['/', '/login', '/auth/callback', '/status']
