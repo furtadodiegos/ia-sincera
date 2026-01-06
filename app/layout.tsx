@@ -44,9 +44,9 @@ export const metadata: Metadata = {
       'Conte o drama do seu amigo e receba uma zoeira sincera com um conselho questionável. Humor garantido!',
     images: [
       {
-        url: '/thumbnail.png',
-        width: 1024,
-        height: 1024,
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
         alt: 'Ironizi - A IA mais sincera',
       },
     ],
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     creator: '@diegofurtado',
     title: 'Ironizi - A IA mais sincera que você vai encontrar',
     description: 'Conte o drama e receba uma zoeira sincera com um conselho questionável!',
-    images: ['/thumbnail.png'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,

@@ -90,3 +90,12 @@
 - [ ] Incluir trecho do roast e modo na imagem gerada
 - [ ] Criar pagina de compartilhamento /r/[id] com OG Image dinamica
 - [ ] Botao de compartilhar no RoastResult que copia link /r/[id]
+
+## API para Aplicacoes Externas
+
+- [ ] Suportar autenticacao via JWT no header Authorization (Bearer token)
+- [ ] Modificar /api/roast para aceitar token via header alem de cookie
+- [ ] Validar token com supabase.auth.getUser(token)
+- [ ] Documentar endpoint para consumo externo
+- [ ] Criar SDK/cliente TypeScript para facilitar integracao (opcional)
+- [ ] Considerar API Keys para integracao backend-to-backend (futuro)
