@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+
 import type { StatusData } from './status.types'
 
 export function useStatusPolling(intervalMs = 10000) {

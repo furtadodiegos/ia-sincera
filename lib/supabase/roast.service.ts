@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+
 import type { Database, TablesInsert } from './database.types'
 
 export type RoastMode = 'tio_churrasco' | 'coach_quantico' | 'amigo_sincero'

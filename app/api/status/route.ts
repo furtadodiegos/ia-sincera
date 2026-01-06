@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
 import { NextResponse } from 'next/server'
+
 import { getStats } from '@/lib/redis'
 
 export const revalidate = 10

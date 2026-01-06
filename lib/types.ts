@@ -14,6 +14,14 @@ export type RoastResponse = {
   was_moderated?: boolean
   fallback?: boolean
   provider: LLMProvider
+  daily_remaining?: number
+}
+
+export type DailyLimitError = {
+  error: string
+  daily_limit_reached: true
+  daily_remaining: 0
+  daily_reset: number
 }
 
 export const MODE_LABELS: Record<RoastMode, string> = {

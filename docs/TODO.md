@@ -82,3 +82,11 @@
 - [x] Modal de login quando limite atingido
 - [x] Configurar Google OAuth no Supabase Dashboard
 - [ ] Adicionar env vars de producao (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+
+## OG Image Dinamica
+
+- [x] Criar rota /og-image.png com ImageResponse (Edge Runtime)
+- [ ] Aceitar query param ?roast=ID para gerar imagem personalizada por roast
+- [ ] Incluir trecho do roast e modo na imagem gerada
+- [ ] Criar pagina de compartilhamento /r/[id] com OG Image dinamica
+- [ ] Botao de compartilhar no RoastResult que copia link /r/[id]

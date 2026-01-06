@@ -1,4 +1,5 @@
 import { Ratelimit } from '@upstash/ratelimit'
+
 import { redis } from './client'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -14,6 +15,12 @@ export const rateLimiters = {
     redis,
     limiter: Ratelimit.slidingWindow(isDev ? 100 : 10, '1 h'),
     prefix: 'rl:roast',
+  }),
+
+  daily: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(isDev ? 50 : 5, '1 d'),
+    prefix: 'rl:daily',
   }),
 }
 

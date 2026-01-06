@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+
 import { MODE_LABELS, type RoastMode } from '@/lib/types'
 
 type ModeSelectorProps = {

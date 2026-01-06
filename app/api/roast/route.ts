@@ -1,10 +1,11 @@
 import * as Sentry from '@sentry/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+
 import { generateRoast, moderateDrama } from '@/lib/llm'
-import type { RateLimitResult } from '@/lib/redis'
 import { checkRateLimit, getRateLimitHeaders, incrementRoastStats } from '@/lib/redis'
 import { createModeratedRoast, createRoast, createServerClient } from '@/lib/supabase'
+import type { RateLimitResult } from '@/lib/redis'
 import type { RoastMode } from '@/lib/types'
 import { getAuthContext } from './roast.auth'
 import { FALLBACK_RESPONSES } from './roast.fallbacks'
@@ -61,6 +62,19 @@ export async function POST(request: Request) {
   const startTime = performance.now()
   const headersList = await headers()
   const ip = getClientIp(headersList)
+
+  const dailyLimit = await checkRateLimit(ip, 'daily')
+  if (!dailyLimit.success) {
+    return NextResponse.json(
+      {
+        error: 'Limite diario atingido. Volte amanha para mais zoeiras!',
+        daily_limit_reached: true,
+        daily_remaining: 0,
+        daily_reset: dailyLimit.reset,
+      },
+      { status: 429, headers: getRateLimitHeaders(dailyLimit) },
+    )
+  }
 
   const rateLimit = await checkRateLimit(ip, 'roasts')
   if (!rateLimit.success) {
@@ -132,6 +146,7 @@ export async function POST(request: Request) {
           was_moderated: true,
           response_time_ms: responseTimeMs,
           provider: moderation.provider,
+          daily_remaining: dailyLimit.remaining - 1,
         },
         { headers: getRateLimitHeaders(rateLimit) },
       )
@@ -175,6 +190,7 @@ export async function POST(request: Request) {
         mode,
         response_time_ms: responseTimeMs,
         provider: roastResult.provider,
+        daily_remaining: dailyLimit.remaining - 1,
       },
       { headers: getRateLimitHeaders(rateLimit) },
     )

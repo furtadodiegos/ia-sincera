@@ -75,17 +75,7 @@ This is a **portfolio project** built to showcase **senior developer** skills in
 ```
 
 ---
-
-## Technical Features
-
-### Multi-Provider LLM with Load Balancing
-
-```typescript
-// lib/llm/selector.ts
-// 2:1 ratio per user, persisted in Redis for 24h
-const provider = counter % 3 === 2 ? 'gemini' : 'openai'
-```
-
+    
 - **Automatic fallback**: if a provider fails, a default response is returned
 - **Per-user tracking**: each user has their own counter
 - **Separate metrics**: PostHog tracks provider performance individually

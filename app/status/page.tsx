@@ -1,4 +1,5 @@
 import Link from 'next/link'
+
 import { StatusDashboard } from './components'
 
 export default function StatusPage() {

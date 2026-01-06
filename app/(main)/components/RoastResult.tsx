@@ -1,5 +1,6 @@
 import { analytics } from '@/lib/posthog'
-import { MODE_LABELS, type RoastResponse } from '@/lib/types'
+import { MODE_LABELS } from '@/lib/types'
+import type { RoastResponse } from '@/lib/types'
 
 type RoastResultProps = {
   result: RoastResponse
