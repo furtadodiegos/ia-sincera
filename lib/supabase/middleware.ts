@@ -5,11 +5,24 @@ import { supabaseConfig } from './config'
 
 const PUBLIC_ROUTES = ['/', '/login', '/auth/callback', '/status']
 
+const STATIC_ASSETS = [
+  '/icon',
+  '/favicon.ico',
+  '/apple-icon',
+  '/og-image.png',
+  '/thumbnail.png',
+  '/robots.txt',
+  '/sitemap.xml',
+]
+
 function isPublicRoute(pathname: string): boolean {
   if (pathname.startsWith('/api/')) {
     return true
   }
-  return PUBLIC_ROUTES.includes(pathname) || pathname.startsWith('/u/')
+  if (STATIC_ASSETS.some((asset) => pathname.startsWith(asset))) {
+    return true
+  }
+  return PUBLIC_ROUTES.includes(pathname) || pathname.startsWith('/u/') || pathname.startsWith('/r/')
 }
 
 export async function updateSession(request: NextRequest) {
