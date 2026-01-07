@@ -8,20 +8,9 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     initPostHog()
 
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(
-        async () => {
-          const { reportWebVitals } = await import('@/lib/web-vitals')
-          reportWebVitals()
-        },
-        { timeout: 5000 },
-      )
-    } else {
-      setTimeout(async () => {
-        const { reportWebVitals } = await import('@/lib/web-vitals')
-        reportWebVitals()
-      }, 100)
-    }
+    import('@/lib/web-vitals').then(({ reportWebVitals }) => {
+      reportWebVitals()
+    })
   }, [])
 
   return <>{children}</>

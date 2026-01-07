@@ -86,6 +86,12 @@ export const viewport = {
   ],
 }
 
+const criticalCSS = `
+:root{--radius:0.625rem;--background:oklch(1 0 0);--foreground:oklch(0.145 0 0);--border:oklch(0.922 0 0)}
+body{background:oklch(1 0 0);color:oklch(0.145 0 0);margin:0}
+.animate-slide-up{opacity:0}
+`
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -94,8 +100,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <style dangerouslySetInnerHTML={{ __html: criticalCSS }} />
         <Preconnect />
-
         <StructuredData />
       </head>
 
